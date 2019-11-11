@@ -1879,7 +1879,7 @@ Transform:
   - {fileID: 687809925}
   - {fileID: 1644388184}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &220266408
 GameObject:
@@ -2661,7 +2661,7 @@ GameObject:
   m_Component:
   - component: {fileID: 291595790}
   m_Layer: 0
-  m_Name: Waypoint
+  m_Name: Waypoint (0)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4448,7 +4448,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1 &558227070
 GameObject:
@@ -6481,6 +6481,61 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 820215199}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &828243243
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 828243245}
+  - component: {fileID: 828243244}
+  m_Layer: 0
+  m_Name: RaceManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &828243244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 828243243}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa8037cd31e023e49a57eade9e052b0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cars:
+  - {fileID: 2030986650}
+  - {fileID: 1280724141}
+  - {fileID: 1277745980}
+  - {fileID: 1355880493}
+  - {fileID: 966536468}
+  respawnDelay: 5
+  distanceToCover: 1
+  GO: {fileID: 0}
+  three: {fileID: 0}
+  two: {fileID: 0}
+  one: {fileID: 0}
+--- !u!4 &828243245
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 828243243}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 192.50266, y: 14.758819, z: 235.06781}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &829400905
 GameObject:
   m_ObjectHideFlags: 0
@@ -7491,7 +7546,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 966536466}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1d1bbf1d2555644ab1041b86853e28d, type: 3}
+  m_Script: {fileID: 11500000, guid: ff6df88bc1fc1004196a8e9d97e3542f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   WheelMesh_FrontLeft: {fileID: 469150817}
@@ -7503,16 +7558,16 @@ MonoBehaviour:
   WheelCollider_BackLeft: {fileID: 1004865384}
   WheelCollider_BackRight: {fileID: 1452735490}
   maxTurnAngle: 15
-  maxTorque: 400
-  topSpeed: 600
+  maxTorque: 300
+  topSpeed: 750
   maxReverseSpeed: -300
-  decelerationTorque: 4
-  maxBrakeTorque: 2
-  handBrakeForwardSlip: 0.05
-  handBrakeSidewaysSlip: 0.5
-  WaypointHolder: {fileID: 1108994867}
+  decelerationTorque: 2
+  maxBrakeTorque: 4
+  handBrakeFSlip: 0.05
+  handBrakeSSlip: 0.5
   brakingDistance: 1
   forwardOffset: 0
+  WaypointHolder: {fileID: 1108994867}
 --- !u!54 &966536468
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -7544,7 +7599,7 @@ Transform:
   - {fileID: 1366175357}
   - {fileID: 762768949}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &986635026
 GameObject:
@@ -8225,7 +8280,7 @@ Transform:
   - {fileID: 1275355055}
   - {fileID: 399171268}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1108994868
 MonoBehaviour:
@@ -9862,7 +9917,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1277745978}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1d1bbf1d2555644ab1041b86853e28d, type: 3}
+  m_Script: {fileID: 11500000, guid: ff6df88bc1fc1004196a8e9d97e3542f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   WheelMesh_FrontLeft: {fileID: 820215200}
@@ -9875,15 +9930,15 @@ MonoBehaviour:
   WheelCollider_BackRight: {fileID: 71508971}
   maxTurnAngle: 15
   maxTorque: 400
-  topSpeed: 600
+  topSpeed: 650
   maxReverseSpeed: -300
-  decelerationTorque: 4
-  maxBrakeTorque: 2
-  handBrakeForwardSlip: 0.05
-  handBrakeSidewaysSlip: 0.5
-  WaypointHolder: {fileID: 1108994867}
+  decelerationTorque: 2
+  maxBrakeTorque: 4
+  handBrakeFSlip: 0.02
+  handBrakeSSlip: 0.4
   brakingDistance: 1
   forwardOffset: 0
+  WaypointHolder: {fileID: 1108994867}
 --- !u!54 &1277745980
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -9915,7 +9970,7 @@ Transform:
   - {fileID: 1728926755}
   - {fileID: 565158553}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1280724139
 GameObject:
@@ -9944,7 +9999,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1280724139}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1d1bbf1d2555644ab1041b86853e28d, type: 3}
+  m_Script: {fileID: 11500000, guid: ff6df88bc1fc1004196a8e9d97e3542f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   WheelMesh_FrontLeft: {fileID: 1158064891}
@@ -9956,16 +10011,16 @@ MonoBehaviour:
   WheelCollider_BackLeft: {fileID: 1451163376}
   WheelCollider_BackRight: {fileID: 1580841314}
   maxTurnAngle: 15
-  maxTorque: 400
-  topSpeed: 600
+  maxTorque: 390
+  topSpeed: 625
   maxReverseSpeed: -300
-  decelerationTorque: 4
-  maxBrakeTorque: 2
-  handBrakeForwardSlip: 0.05
-  handBrakeSidewaysSlip: 0.5
-  WaypointHolder: {fileID: 1108994867}
+  decelerationTorque: 2
+  maxBrakeTorque: 4
+  handBrakeFSlip: 0.08
+  handBrakeSSlip: 0.6
   brakingDistance: 1
   forwardOffset: 0
+  WaypointHolder: {fileID: 1108994867}
 --- !u!54 &1280724141
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -9997,7 +10052,7 @@ Transform:
   - {fileID: 1320907240}
   - {fileID: 794710110}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1285371249
 GameObject:
@@ -10369,7 +10424,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1355880491}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1d1bbf1d2555644ab1041b86853e28d, type: 3}
+  m_Script: {fileID: 11500000, guid: ff6df88bc1fc1004196a8e9d97e3542f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   WheelMesh_FrontLeft: {fileID: 581406388}
@@ -10384,13 +10439,13 @@ MonoBehaviour:
   maxTorque: 400
   topSpeed: 600
   maxReverseSpeed: -300
-  decelerationTorque: 4
-  maxBrakeTorque: 2
-  handBrakeForwardSlip: 0.05
-  handBrakeSidewaysSlip: 0.5
-  WaypointHolder: {fileID: 1108994867}
+  decelerationTorque: 2
+  maxBrakeTorque: 5
+  handBrakeFSlip: 0.08
+  handBrakeSSlip: 0.5
   brakingDistance: 1
   forwardOffset: 0
+  WaypointHolder: {fileID: 1108994867}
 --- !u!54 &1355880493
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -10422,7 +10477,7 @@ Transform:
   - {fileID: 278041760}
   - {fileID: 699440144}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1359169985
 GameObject:
@@ -11139,7 +11194,7 @@ Transform:
   - {fileID: 1558321115}
   - {fileID: 1666340604}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1403993813
 MonoBehaviour:
@@ -11162,16 +11217,16 @@ MonoBehaviour:
   WheelCollider_BackLeft: {fileID: 43349123}
   WheelCollider_BackRight: {fileID: 481327204}
   maxTurnAngle: 15
-  maxTorque: 400
-  topSpeed: 600
+  maxTorque: 425
+  topSpeed: 700
   maxReverseSpeed: -300
   decelerationTorque: 4
   maxBrakeTorque: 2
   handBrakeForwardSlip: 0.05
   handBrakeSidewaysSlip: 0.5
-  WaypointHolder: {fileID: 1108994867}
   brakingDistance: 1
   forwardOffset: 0
+  WaypointHolder: {fileID: 1108994867}
 --- !u!1 &1405434748
 GameObject:
   m_ObjectHideFlags: 0
@@ -12898,7 +12953,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1639382307}
   m_Layer: 0
-  m_Name: Waypoint (0)
+  m_Name: Waypoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14805,7 +14860,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2030986648}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1d1bbf1d2555644ab1041b86853e28d, type: 3}
+  m_Script: {fileID: 11500000, guid: ff6df88bc1fc1004196a8e9d97e3542f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   WheelMesh_FrontLeft: {fileID: 1498418152}
@@ -14817,16 +14872,16 @@ MonoBehaviour:
   WheelCollider_BackLeft: {fileID: 795167205}
   WheelCollider_BackRight: {fileID: 532950069}
   maxTurnAngle: 15
-  maxTorque: 400
-  topSpeed: 600
+  maxTorque: 500
+  topSpeed: 525
   maxReverseSpeed: -300
-  decelerationTorque: 4
-  maxBrakeTorque: 2
-  handBrakeForwardSlip: 0.05
-  handBrakeSidewaysSlip: 0.5
-  WaypointHolder: {fileID: 1108994867}
+  decelerationTorque: 2
+  maxBrakeTorque: 4
+  handBrakeFSlip: 0.05
+  handBrakeSSlip: 0.5
   brakingDistance: 1
   forwardOffset: 0
+  WaypointHolder: {fileID: 1108994867}
 --- !u!54 &2030986650
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -14858,7 +14913,7 @@ Transform:
   - {fileID: 185822979}
   - {fileID: 1971881277}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2036396254
 GameObject:
@@ -15096,7 +15151,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2060006809
 MonoBehaviour:

@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class AIController : MonoBehaviour
 {
-    public Transform WheelMesh_FrontRight;
-    public Transform WheelMesh_BackRight;
     public Transform WheelMesh_FrontLeft;
+    public Transform WheelMesh_FrontRight;
     public Transform WheelMesh_BackLeft;
-    public WheelCollider WheelCollider_FrontRight;
-    public WheelCollider WheelCollider_BackRight;
+    public Transform WheelMesh_BackRight;
     public WheelCollider WheelCollider_FrontLeft;
+    public WheelCollider WheelCollider_FrontRight;
     public WheelCollider WheelCollider_BackLeft;
+    public WheelCollider WheelCollider_BackRight;
 
     public float maxTurnAngle = 10;
     public float maxTorque = 10;
