@@ -151,30 +151,38 @@ public class CarController : MonoBehaviour
 
     }
 
-    // Making the wheels move when they hit bumps
-    //void UpdateWheelPositions()
-    //{
-    //    WheelHit Contact = new WheelHit();
+    // Making the wheel meshes respond to movement
+    void UpdateWheelPositions()
+    {
+        //float tempY = WheelCollider_FrontLeft.steerAngle + gameObject.transform.rotation.y;
+        //Vector3 wheelRotation = new Vector3(WheelMesh_FrontLeft.rotation.x, tempY, WheelMesh_FrontLeft.rotation.z + 90);
+        //Quaternion rotation = Quaternion.Euler(wheelRotation);
+        //WheelMesh_FrontLeft.rotation = rotation;
+        //WheelMesh_FrontRight.rotation = rotation;
 
-    //    if (WheelCollider_FrontLeft.GetGroundHit(out Contact))
-    //    {
-    //        Vector3 temp = WheelCollider_FrontLeft.transform.position;
-    //        temp.y = 0.5f + (Contact.point + (WheelCollider_FrontLeft.transform.up * WheelCollider_FrontLeft.radius)).y;
-    //        WheelMesh_FrontLeft.position = temp;
 
-    //        temp = WheelCollider_FrontRight.transform.position;
-    //        temp.y = 0.5f + (Contact.point + (WheelCollider_FrontRight.transform.up * WheelCollider_FrontRight.radius)).y;
-    //        WheelMesh_FrontRight.position = temp;
 
-    //        temp = WheelCollider_BackLeft.transform.position;
-    //        temp.y = 0.5f + (Contact.point + (WheelCollider_BackLeft.transform.up * WheelCollider_BackLeft.radius)).y;
-    //        WheelMesh_BackLeft.position = temp;
+        //WheelHit Contact = new WheelHit();
 
-    //        temp = WheelCollider_BackRight.transform.position;
-    //        temp.y = 0.5f + (Contact.point + (WheelCollider_BackRight.transform.up * WheelCollider_BackRight.radius)).y;
-    //        WheelMesh_BackRight.position = temp;
-    //    }
-    //}
+        //if (WheelCollider_FrontLeft.GetGroundHit(out Contact))
+        //{
+        //    Vector3 temp = WheelCollider_FrontLeft.transform.position;
+        //    temp.y = 0.5f + (Contact.point + (WheelCollider_FrontLeft.transform.up * WheelCollider_FrontLeft.radius)).y;
+        //    WheelMesh_FrontLeft.position = temp;
+
+        //    temp = WheelCollider_FrontRight.transform.position;
+        //    temp.y = 0.5f + (Contact.point + (WheelCollider_FrontRight.transform.up * WheelCollider_FrontRight.radius)).y;
+        //    WheelMesh_FrontRight.position = temp;
+
+        //    temp = WheelCollider_BackLeft.transform.position;
+        //    temp.y = 0.5f + (Contact.point + (WheelCollider_BackLeft.transform.up * WheelCollider_BackLeft.radius)).y;
+        //    WheelMesh_BackLeft.position = temp;
+
+        //    temp = WheelCollider_BackRight.transform.position;
+        //    temp.y = 0.5f + (Contact.point + (WheelCollider_BackRight.transform.up * WheelCollider_BackRight.radius)).y;
+        //    WheelMesh_BackRight.position = temp;
+        //}
+    }
 
     // Waypoint related functions
     public void GetWaypoints()
