@@ -2,95 +2,124 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CarController : MonoBehaviour
+public class AIController : MonoBehaviour
 {
-    public Transform WheelMesh_FrontLeft;
     public Transform WheelMesh_FrontRight;
-    public Transform WheelMesh_BackLeft;
     public Transform WheelMesh_BackRight;
-    public WheelCollider WheelCollider_FrontLeft;
+    public Transform WheelMesh_FrontLeft;
+    public Transform WheelMesh_BackLeft;
     public WheelCollider WheelCollider_FrontRight;
-    public WheelCollider WheelCollider_BackLeft;
     public WheelCollider WheelCollider_BackRight;
+    public WheelCollider WheelCollider_FrontLeft;
+    public WheelCollider WheelCollider_BackLeft;
 
-    public float maxTurnAngle = 20f;
-    public float maxTorque = 100f;
-    public float topSpeed = 200f;
+    public float maxTurnAngle = 10;
+    public float maxTorque = 10;
+    public float topSpeed;
+    public float maxReverseSpeed = -50;
 
-    public float maxReverseSpeed = -100f;
-    public float decelerationTorque = 3f;
-    public float maxBrakeTorque = 4f;
-    public float handBrakeForwardSlip = 0.08f;
-    public float handBrakeSidewaysSlip = 0.04f;
-
-    public float brakingDistance = 1f;
+    public float decelerationTorque = 30;
+    public float maxBrakeTorque = 100;
+    public float handBrakeFSlip = 0.04f;
+    public float handBrakeSSlip = 0.04f;
+    public float brakingDistance = 6f;
     public float forwardOffset;
+
     public Transform WaypointHolder;
 
-    private float currentSpeed;
-    private Vector3 centerOfMassOffset = new Vector3(0f, -0.9f, 0f);
     private Rigidbody body;
-    private float spoilerRatio = 0.2f;
+    private Vector3 centerOfMassAdjustment = new Vector3(0f, -0.9f, 0f);
+    private float spoilerRatio = 0.1f;
+    private float currentSpeed;
+    private float inputSteer;
+    private float inputTorque;
     private bool applyHandBrake = false;
     private Transform[] waypoints;
     private int currentWaypoint = 0;
-    private float inputSteer;
-    private float inputTorque;
 
-
-
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         body = GetComponent<Rigidbody>();
-        body.centerOfMass += centerOfMassOffset;
+        body.centerOfMass += centerOfMassAdjustment;
 
         //Get the waypoints from the track
         GetWaypoints();
     }
 
-    // Update is called once per frame
-    void Update()
-    { 
+    private void Update()
+    {
         UpdateWheelPositions();
     }
 
     private void FixedUpdate()
     {
+        // Waypoint checking
+        Vector3 RelativeWaypointPosition = transform.InverseTransformPoint(new Vector3(waypoints[currentWaypoint].position.x, transform.position.y, waypoints[currentWaypoint].position.z));
+        inputSteer = RelativeWaypointPosition.x / RelativeWaypointPosition.magnitude;
+
         //front wheel steering
         WheelCollider_FrontRight.steerAngle = Input.GetAxis("Horizontal") * maxTurnAngle;
         WheelCollider_FrontLeft.steerAngle = Input.GetAxis("Horizontal") * maxTurnAngle;
-
-
 
         //spoiler
         Vector3 localVelocity = transform.InverseTransformDirection(body.velocity);
         body.AddForce(-transform.up * (localVelocity.z * spoilerRatio), ForceMode.Impulse);
 
-        //braking
-        if (!applyHandBrake && (Input.GetAxis("Vertical") <= -0.5f && localVelocity.z > 0 || (Input.GetAxis("Vertical") <= -0.5f && localVelocity.z > 0)))
+        if (Mathf.Abs(inputSteer) < 0.5f)
         {
-            WheelCollider_BackLeft.brakeTorque = decelerationTorque + maxTorque;
-            WheelCollider_BackRight.brakeTorque = decelerationTorque + maxTorque;
-        }
-        else if (!applyHandBrake && (Input.GetAxis("Vertical") == 0))
-        {
-            WheelCollider_BackLeft.brakeTorque = decelerationTorque;
-            WheelCollider_BackRight.brakeTorque = decelerationTorque;
+            inputTorque = RelativeWaypointPosition.z / RelativeWaypointPosition.magnitude;
+            applyHandBrake = false;
         }
         else
         {
-            WheelCollider_BackLeft.brakeTorque = 0;
-            WheelCollider_BackRight.brakeTorque = 0;
+            if (body.velocity.magnitude > 10)
+            {
+                applyHandBrake = true;
+            }
+            else if (localVelocity.z > 10)
+            {
+                applyHandBrake = false;
+                inputTorque = -1;
+                inputSteer *= -1;
+            }
+            else
+            {
+                applyHandBrake = false;
+                inputTorque = 0;
+            }
         }
 
+        //Hand BRAKE
+        if (applyHandBrake)
+        {
+            SetSlipValues(handBrakeFSlip, handBrakeSSlip);
+        }
+        else
+        {
+            SetSlipValues(1f, 1f);
+        }
+
+        if (RelativeWaypointPosition.magnitude < 25)
+        {
+            currentWaypoint++;
+            if (currentWaypoint >= waypoints.Length)
+            {
+                currentWaypoint = 0;
+                RaceManager.Instance.LapFinishedByAI(this);
+            }
+        }
+
+        WheelCollider_FrontLeft.steerAngle = inputSteer * maxTurnAngle;
+        WheelCollider_FrontRight.steerAngle = inputSteer * maxTurnAngle;
+
         // KM/H
-        currentSpeed = WheelCollider_BackLeft.radius * WheelCollider_BackRight.rpm * Mathf.PI * 0.12f;
+        currentSpeed = WheelCollider_BackLeft.radius * WheelCollider_BackLeft.rpm * Mathf.PI * 0.12f;
         if (currentSpeed < topSpeed && currentSpeed > maxReverseSpeed)
         {
+            float adjustment = ForwardRaycast();
             //rear wheel drive
-            WheelCollider_BackRight.motorTorque = Input.GetAxis("Vertical") * maxTorque;
-            WheelCollider_BackLeft.motorTorque = Input.GetAxis("Vertical") * maxTorque;
+            WheelCollider_BackRight.motorTorque = adjustment * inputTorque * maxTorque;
+            WheelCollider_BackLeft.motorTorque = adjustment * inputTorque * maxTorque;
         }
         else
         {
@@ -98,33 +127,10 @@ public class CarController : MonoBehaviour
             WheelCollider_BackRight.motorTorque = 0;
         }
 
-        //Hand BRAKE
-        if (Input.GetButton("Jump"))
-        {
-            applyHandBrake = true;
-            WheelCollider_FrontLeft.brakeTorque = maxBrakeTorque;
-            WheelCollider_FrontRight.brakeTorque = maxBrakeTorque;
 
-            //Powerslide
-            if (GetComponent<Rigidbody>().velocity.magnitude > 1)
-            {
-                SetSlipValues(handBrakeForwardSlip, handBrakeSidewaysSlip);
-            }
-            else
-            {
-                SetSlipValues(1f, 1f);
-            }
-        }
-        else
-        {
-            applyHandBrake = false;
-            WheelCollider_FrontLeft.brakeTorque = 0;
-            WheelCollider_FrontRight.brakeTorque = 0;
-            SetSlipValues(1f, 1f);
-        }
     }
 
-    // Handbrake Slip
+
     private void SetSlipValues(float F, float S)
     {
         WheelFrictionCurve tempStruct = WheelCollider_BackRight.forwardFriction;
@@ -145,14 +151,13 @@ public class CarController : MonoBehaviour
 
     }
 
-    // Making the wheel meshes respond to movement
     void UpdateWheelPositions()
     {
         float rotationThisFrame = -360 * Time.deltaTime;
         WheelMesh_FrontRight.Rotate(0, WheelCollider_FrontRight.rpm / rotationThisFrame, 0);
         WheelMesh_BackRight.Rotate(0, WheelCollider_BackRight.rpm / rotationThisFrame, 0);
         WheelMesh_FrontLeft.Rotate(0, WheelCollider_FrontLeft.rpm / rotationThisFrame, 0);
-        WheelMesh_BackLeft.Rotate(0, WheelCollider_BackLeft.rpm / rotationThisFrame, 0);
+        WheelMesh_BackLeft.Rotate(0, WheelCollider_FrontRight.rpm / rotationThisFrame, 0);
 
         float tempY = WheelCollider_FrontLeft.steerAngle + gameObject.transform.eulerAngles.y;
         Vector3 wheelRotation = new Vector3(WheelMesh_FrontLeft.rotation.x, tempY, WheelMesh_FrontLeft.rotation.z + 90);
@@ -161,7 +166,6 @@ public class CarController : MonoBehaviour
         WheelMesh_FrontRight.rotation = rotation;
     }
 
-    // Waypoint related functions
     public void GetWaypoints()
     {
         Transform[] potentialWaypoints = WaypointHolder.GetComponentsInChildren<Transform>();
@@ -177,7 +181,6 @@ public class CarController : MonoBehaviour
     {
         return waypoints[currentWaypoint];
     }
-
     public Transform GetLastWaypoint()
     {
         if (currentWaypoint - 1 < 0)
@@ -185,5 +188,19 @@ public class CarController : MonoBehaviour
             return waypoints[waypoints.Length - 1];
         }
         return waypoints[currentWaypoint - 1];
+    }
+
+    float ForwardRaycast()
+    {
+        RaycastHit hit;
+        Vector3 CarFront = transform.position + (transform.forward * forwardOffset);
+        Debug.DrawRay(CarFront, transform.forward * brakingDistance);
+
+        if (Physics.Raycast(CarFront, transform.forward, out hit, brakingDistance))
+        {
+            return (((CarFront - hit.point).magnitude / brakingDistance) * 2) * -1;
+        }
+
+        return 1f;
     }
 }
