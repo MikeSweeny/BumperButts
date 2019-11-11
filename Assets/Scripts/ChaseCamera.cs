@@ -18,16 +18,16 @@ public class ChaseCamera : MonoBehaviour
 
         desiredAngle = car.eulerAngles.y;
 
-        //if backing up
-        //if (Input.GetKey("W"))
-        //{
-        //    desiredAngle += 180;
-        //}
-        Vector3 localVelocity = car.InverseTransformDirection(car.GetComponent<Rigidbody>().velocity);
-        if (localVelocity.z < -0.5f)
+        // if backing up
+        if (Input.GetKey(KeyCode.S))
         {
             desiredAngle += 180;
         }
+        //Vector3 localVelocity = car.InverseTransformDirection(car.GetComponent<Rigidbody>().velocity);
+        //if (localVelocity.z < -0.5f)
+        //{
+        //    desiredAngle += 180;
+        //}
 
         float desiredHeight = car.position.y + height;
 
@@ -41,4 +41,25 @@ public class ChaseCamera : MonoBehaviour
         transform.position = finalPosition;
         transform.LookAt(car);
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        distance -= 0.5f;
+    }
+    private void OnCollisionExit(Collision collision)
+    {
+        distance += 0.5f;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        distance -= 0.5f;
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        distance += 0.5f;
+    }
 }
+
+

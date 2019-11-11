@@ -58,7 +58,7 @@ public class CarController : MonoBehaviour
         WheelMesh_FrontLeft.Rotate(0, WheelCollider_FrontLeft.rpm / rotationThisFrame, 0);
         WheelMesh_BackLeft.Rotate(0, WheelCollider_BackLeft.rpm / rotationThisFrame, 0);
 
-        UpdateWheelPositions();
+        //UpdateWheelPositions();
     }
 
     private void FixedUpdate()
@@ -151,45 +151,30 @@ public class CarController : MonoBehaviour
 
     }
 
-    // Spinning the wheel meshes with the collider's speed
-    void UpdateWheelPositions()
-    {
-        WheelHit Contact = new WheelHit();
+    // Making the wheels move when they hit bumps
+    //void UpdateWheelPositions()
+    //{
+    //    WheelHit Contact = new WheelHit();
 
-        if (WheelCollider_FrontLeft.GetGroundHit(out Contact))
-        {
-            Vector3 temp = WheelCollider_FrontLeft.transform.position;
-            temp.y = (Contact.point + (WheelCollider_FrontLeft.transform.up * WheelCollider_FrontLeft.radius)).y;
-            WheelMesh_FrontLeft.position = temp;
+    //    if (WheelCollider_FrontLeft.GetGroundHit(out Contact))
+    //    {
+    //        Vector3 temp = WheelCollider_FrontLeft.transform.position;
+    //        temp.y = 0.5f + (Contact.point + (WheelCollider_FrontLeft.transform.up * WheelCollider_FrontLeft.radius)).y;
+    //        WheelMesh_FrontLeft.position = temp;
 
-            temp = WheelCollider_FrontRight.transform.position;
-            temp.y = (Contact.point + (WheelCollider_FrontRight.transform.up * WheelCollider_FrontRight.radius)).y;
-            WheelMesh_FrontRight.position = temp;
+    //        temp = WheelCollider_FrontRight.transform.position;
+    //        temp.y = 0.5f + (Contact.point + (WheelCollider_FrontRight.transform.up * WheelCollider_FrontRight.radius)).y;
+    //        WheelMesh_FrontRight.position = temp;
 
-            temp = WheelCollider_BackLeft.transform.position;
-            temp.y = (Contact.point + (WheelCollider_BackLeft.transform.up * WheelCollider_BackLeft.radius)).y;
-            WheelMesh_BackLeft.position = temp;
+    //        temp = WheelCollider_BackLeft.transform.position;
+    //        temp.y = 0.5f + (Contact.point + (WheelCollider_BackLeft.transform.up * WheelCollider_BackLeft.radius)).y;
+    //        WheelMesh_BackLeft.position = temp;
 
-            temp = WheelCollider_BackRight.transform.position;
-            temp.y = (Contact.point + (WheelCollider_BackRight.transform.up * WheelCollider_BackRight.radius)).y;
-            WheelMesh_BackRight.position = temp;
-        }
-    }
-
-    // Checking for cars infront
-    float ForwardRaycast()
-    {
-        RaycastHit hit;
-        Vector3 CarFront = transform.position + (transform.forward * forwardOffset);
-        Debug.DrawRay(CarFront, transform.forward * brakingDistance);
-
-        if (Physics.Raycast(CarFront, transform.forward, out hit, brakingDistance))
-        {
-            return (((CarFront - hit.point).magnitude / brakingDistance) * 2) * -1;
-        }
-
-        return 1f;
-    }
+    //        temp = WheelCollider_BackRight.transform.position;
+    //        temp.y = 0.5f + (Contact.point + (WheelCollider_BackRight.transform.up * WheelCollider_BackRight.radius)).y;
+    //        WheelMesh_BackRight.position = temp;
+    //    }
+    //}
 
     // Waypoint related functions
     public void GetWaypoints()
