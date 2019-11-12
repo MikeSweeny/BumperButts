@@ -15,6 +15,7 @@ public class RaceManager : MonoBehaviour
     public float p_distanceToCover = 1f;
 
     private AIController[] scripts;
+    private AIComponent[] components;
     private CarController p_script;
 
     private float[] respawnTimes;
@@ -38,6 +39,14 @@ public class RaceManager : MonoBehaviour
 
     public static RaceManager Instance { get { return instance; } }
     private static RaceManager instance = null;
+
+    // Making these persistent for the lava respawner
+    public Transform[] nextWaypoint;
+    public Transform[] lastWaypoint;
+    public int currentCar = 0;
+
+    public Transform p_nextWaypoint;
+    public Transform p_lastWaypoint;
 
     private void Awake()
     {
@@ -105,6 +114,9 @@ public class RaceManager : MonoBehaviour
         respawnTimes = new float[cars.Length];
         distanceLeftToTravel = new float[cars.Length];
         scripts = new AIController[cars.Length];
+        components = new AIComponent[cars.Length];
+        lastWaypoint = new Transform[cars.Length];
+        nextWaypoint = new Transform[cars.Length];
         waypoint = new Transform[cars.Length];
         laps = new int[cars.Length];
 
@@ -112,6 +124,8 @@ public class RaceManager : MonoBehaviour
         for (int i = 0; i < respawnTimes.Length; i++)
         {
             scripts[i] = cars[i].gameObject.GetComponent<AIController>();
+            components[i] = cars[i].gameObject.transform.GetChild(0).transform.GetChild(0).GetComponent<AIComponent>();
+            components[i].thisCarNum = i;
             respawnTimes[i] = respawnDelay;
             distanceLeftToTravel[i] = float.MaxValue;
             laps[i] = 0;
@@ -128,13 +142,14 @@ public class RaceManager : MonoBehaviour
         // AI lap navigate logic
         for (int i = 0; i < cars.Length; i++)
         {
-            Transform nextWaypoint = scripts[i].GetCurrentWaypoint();
-            float distanceCovered = (nextWaypoint.position - cars[i].position).magnitude;
+            nextWaypoint[i] = scripts[i].GetCurrentWaypoint();
+            lastWaypoint[i] = scripts[i].GetLastWaypoint();
+            float distanceCovered = (nextWaypoint[i].position - cars[i].position).magnitude;
 
             if (distanceLeftToTravel[i] - distanceToCover > distanceCovered ||
-                waypoint[i] != nextWaypoint)
+                waypoint[i] != nextWaypoint[i])
             {
-                waypoint[i] = nextWaypoint;
+                waypoint[i] = nextWaypoint[i];
                 respawnTimes[i] = respawnDelay;
                 distanceLeftToTravel[i] = distanceCovered;
             }
@@ -144,14 +159,7 @@ public class RaceManager : MonoBehaviour
             }
             if (respawnTimes[i] <= 0)
             {
-                respawnTimes[i] = respawnDelay;
-                distanceLeftToTravel[i] = float.MaxValue;
-                cars[i].velocity = Vector3.zero;
-
-                Transform lastWaypoint = scripts[i].GetLastWaypoint();
-                cars[i].position = lastWaypoint.position;
-                cars[i].rotation = Quaternion.LookRotation(nextWaypoint.position - lastWaypoint.position);
-
+                AIRespawn(lastWaypoint[i], nextWaypoint[i], i);
                 if (laps[i] >= 3)
                 {
                     SceneManager.LoadScene("RaceLevel");
@@ -159,9 +167,10 @@ public class RaceManager : MonoBehaviour
             }
         }
         // Player lap navigate logic
-        Transform p_nextWaypoint = p_script.GetCurrentWaypoint();
+        p_nextWaypoint = p_script.GetCurrentWaypoint();
+        p_lastWaypoint = p_script.GetLastWaypoint();
         float p_distanceCovered = (p_nextWaypoint.position - p_car.position).magnitude;
-        if (p_distanceCovered - p_distanceToCover > p_distanceCovered ||
+        if (p_distanceLeftToTravel - p_distanceToCover > p_distanceCovered ||
             p_waypoint != p_nextWaypoint)
         {
             p_waypoint = p_nextWaypoint;
@@ -174,19 +183,30 @@ public class RaceManager : MonoBehaviour
         }
         if (p_respawnTime <= 0)
         {
-            p_respawnTime = p_respawnDelay;
-            p_distanceLeftToTravel = float.MaxValue;
-            p_car.velocity = Vector3.zero;
-
-            Transform p_lastWaypoint = p_script.GetLastWaypoint();
-            p_car.position = p_lastWaypoint.position;
-            p_car.rotation = Quaternion.LookRotation(p_nextWaypoint.position - p_lastWaypoint.position);
+            PlayerRespawn(p_lastWaypoint, p_nextWaypoint);
 
             if (p_laps >= 3)
             {
                 SceneManager.LoadScene("RaceLevel");
             }
         }
+    }
+    public void PlayerRespawn(Transform p_last, Transform p_next)
+    {
+        p_respawnTime = p_respawnDelay;
+        p_distanceLeftToTravel = float.MaxValue;
+        p_car.velocity = Vector3.zero;
+        p_car.position = p_last.position;
+        p_car.rotation = Quaternion.LookRotation(p_next.position - p_last.position);
+    }
+
+    public void AIRespawn(Transform last, Transform next, int i)
+    {
+        respawnTimes[i] = respawnDelay;
+        distanceLeftToTravel[i] = float.MaxValue;
+        cars[i].velocity = Vector3.zero;
+        cars[i].position = last.position;
+        cars[i].rotation = Quaternion.LookRotation(next.position - last.position);
     }
 
     public void LapFinishedByPlayer(CarController script)

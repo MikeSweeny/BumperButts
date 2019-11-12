@@ -30,7 +30,7 @@ public class CarController : MonoBehaviour
     private float currentSpeed;
     private Vector3 centerOfMassOffset = new Vector3(0f, -0.9f, 0f);
     private Rigidbody body;
-    private float spoilerRatio = 0.2f;
+    private float spoilerRatio = 2f;
     private bool applyHandBrake = false;
     private Transform[] waypoints;
     private int currentWaypoint = 0;
@@ -121,6 +121,17 @@ public class CarController : MonoBehaviour
             WheelCollider_FrontLeft.brakeTorque = 0;
             WheelCollider_FrontRight.brakeTorque = 0;
             SetSlipValues(1f, 1f);
+        }
+        // Waypoint tracking
+        Vector3 RelativeWaypointPosition = transform.InverseTransformPoint(new Vector3(waypoints[currentWaypoint].position.x, transform.position.y, waypoints[currentWaypoint].position.z));
+        if (RelativeWaypointPosition.magnitude < 25)
+        {
+            currentWaypoint++;
+            if (currentWaypoint >= waypoints.Length)
+            {
+                currentWaypoint = 0;
+                RaceManager.Instance.LapFinishedByPlayer(this);
+            }
         }
     }
 

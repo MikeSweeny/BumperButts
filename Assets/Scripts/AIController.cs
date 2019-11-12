@@ -29,7 +29,7 @@ public class AIController : MonoBehaviour
 
     private Rigidbody body;
     private Vector3 centerOfMassAdjustment = new Vector3(0f, -0.9f, 0f);
-    private float spoilerRatio = 0.1f;
+    private float spoilerRatio = 1.5f;
     private float currentSpeed;
     private float inputSteer;
     private float inputTorque;
