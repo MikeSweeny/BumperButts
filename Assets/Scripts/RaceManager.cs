@@ -6,14 +6,28 @@ using UnityEngine.SceneManagement;
 public class RaceManager : MonoBehaviour
 {
     public Rigidbody[] cars;
-    public float respawnDelay = 5f;
-    public float distanceToCover = 1f;
-    private AIController[] scripts;
-    private float[] respawnTimes;
-    private float[] distanceLeftToTravel;
-    private Transform[] waypoint;
+    public Rigidbody p_car;
 
-    private int[] laps;
+    public float respawnDelay = 5f;
+    public float p_respawnDelay = 5f;
+
+    public float distanceToCover = 1f;
+    public float p_distanceToCover = 1f;
+
+    private AIController[] scripts;
+    private CarController p_script;
+
+    private float[] respawnTimes;
+    private float p_respawnTime;
+
+    private float[] distanceLeftToTravel;
+    private float p_distanceLeftToTravel;
+
+    private Transform[] waypoint;
+    private Transform p_waypoint;
+
+    public int[] laps;
+    public int p_laps;
 
     public Texture2D GO;
     public Texture2D three;
@@ -102,11 +116,16 @@ public class RaceManager : MonoBehaviour
             distanceLeftToTravel[i] = float.MaxValue;
             laps[i] = 0;
         }
+        p_script = p_car.GetComponent<CarController>();
+        p_respawnTime = p_respawnDelay;
+        p_distanceLeftToTravel = float.MaxValue;
+        p_laps = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
+        // AI lap navigate logic
         for (int i = 0; i < cars.Length; i++)
         {
             Transform nextWaypoint = scripts[i].GetCurrentWaypoint();
@@ -132,12 +151,47 @@ public class RaceManager : MonoBehaviour
                 Transform lastWaypoint = scripts[i].GetLastWaypoint();
                 cars[i].position = lastWaypoint.position;
                 cars[i].rotation = Quaternion.LookRotation(nextWaypoint.position - lastWaypoint.position);
-            }
-            if (laps[i] >= 3)
-            {
-                SceneManager.LoadScene("SampleScene");
+
+                if (laps[i] >= 3)
+                {
+                    SceneManager.LoadScene("RaceLevel");
+                }
             }
         }
+        // Player lap navigate logic
+        Transform p_nextWaypoint = p_script.GetCurrentWaypoint();
+        float p_distanceCovered = (p_nextWaypoint.position - p_car.position).magnitude;
+        if (p_distanceCovered - p_distanceToCover > p_distanceCovered ||
+            p_waypoint != p_nextWaypoint)
+        {
+            p_waypoint = p_nextWaypoint;
+            p_respawnTime = p_respawnDelay;
+            p_distanceLeftToTravel = p_distanceCovered;
+        }
+        else
+        {
+            p_respawnTime -= Time.deltaTime;
+        }
+        if (p_respawnTime <= 0)
+        {
+            p_respawnTime = p_respawnDelay;
+            p_distanceLeftToTravel = float.MaxValue;
+            p_car.velocity = Vector3.zero;
+
+            Transform p_lastWaypoint = p_script.GetLastWaypoint();
+            p_car.position = p_lastWaypoint.position;
+            p_car.rotation = Quaternion.LookRotation(p_nextWaypoint.position - p_lastWaypoint.position);
+
+            if (p_laps >= 3)
+            {
+                SceneManager.LoadScene("RaceLevel");
+            }
+        }
+    }
+
+    public void LapFinishedByPlayer(CarController script)
+    {
+        p_laps++;
     }
 
     public void LapFinishedByAI(AIController script)

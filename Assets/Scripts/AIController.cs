@@ -99,7 +99,7 @@ public class AIController : MonoBehaviour
             SetSlipValues(1f, 1f);
         }
 
-        if (RelativeWaypointPosition.magnitude < 25)
+        if (RelativeWaypointPosition.magnitude < 15)
         {
             currentWaypoint++;
             if (currentWaypoint >= waypoints.Length)
