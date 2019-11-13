@@ -37,7 +37,9 @@ public class CarController : MonoBehaviour
     private float inputSteer;
     private float inputTorque;
 
-    public Powerup currentPowerup;
+    //public Powerup currentPowerup;
+    public GameObject currentPowerup;
+    private PickupBox pickup;
 
     // Start is called before the first frame update
     void Start()
@@ -135,8 +137,16 @@ public class CarController : MonoBehaviour
         // Using Powerup
         if (Input.GetKeyDown(KeyCode.E))
         {
-            currentPowerup.SetTarget(this.gameObject);
-            currentPowerup.triggered = true;
+            SpeedBoost activePowerup;
+            if (currentPowerup != null)
+            {
+                if (activePowerup = currentPowerup.gameObject.GetComponent<SpeedBoost>())
+                {
+                    activePowerup.SetTarget(this.gameObject);
+                    activePowerup.Fire();
+                }
+
+            }
         }
     }
 
@@ -203,15 +213,21 @@ public class CarController : MonoBehaviour
         return waypoints[currentWaypoint - 1];
     }
 
-    PickupBox pickup;
+    public void SetCurrentPowerup(GameObject newPowerup)
+    {
+        currentPowerup = newPowerup;
+    }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (pickup = other.gameObject.GetComponent<PickupBox>())
+        if (currentPowerup == null)
         {
-            Debug.Log("GotPowerup");
-            pickup.pickedUp = true;
-            RaceManager.Instance.NewPowerup();
+            if (pickup = other.gameObject.GetComponent<PickupBox>())
+            {
+                Debug.Log("GotPowerup");
+                pickup.Despawn();
+                RaceManager.Instance.NewPowerup(this);
+            }
         }
     }
 }

@@ -1579,51 +1579,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 113136802}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &113926638
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 113926640}
-  - component: {fileID: 113926639}
-  m_Layer: 0
-  m_Name: SpeedBoost
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &113926639
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 113926638}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 516b90a26b36494479e09bb46bf3c6ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fired: 0
-  triggered: 0
---- !u!4 &113926640
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 113926638}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 293.54764, y: 7.3297315, z: 269.59152}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 12
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &118971909
 GameObject:
   m_ObjectHideFlags: 0
@@ -9014,7 +8969,7 @@ PrefabInstance:
     - target: {fileID: 8422034301082845653, guid: 96a4a9d4fa603d24e95b81012fde44e7,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 294.2019
+      value: 194.6
       objectReference: {fileID: 0}
     - target: {fileID: 8422034301082845653, guid: 96a4a9d4fa603d24e95b81012fde44e7,
         type: 3}
@@ -9024,7 +8979,7 @@ PrefabInstance:
     - target: {fileID: 8422034301082845653, guid: 96a4a9d4fa603d24e95b81012fde44e7,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 277.53165
+      value: 287.4
       objectReference: {fileID: 0}
     - target: {fileID: 8422034301082845653, guid: 96a4a9d4fa603d24e95b81012fde44e7,
         type: 3}
@@ -9945,12 +9900,9 @@ MonoBehaviour:
   currentCar: 0
   p_nextWaypoint: {fileID: 0}
   p_lastWaypoint: {fileID: 0}
-  allPickups:
-  - {fileID: 1588749892}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  allPickups: []
+  speedPrefab: {fileID: 4726128050723532568, guid: 2bf7d2f4cca620747a34cb1e047e97c2,
+    type: 3}
 --- !u!4 &828243245
 Transform:
   m_ObjectHideFlags: 0
@@ -16562,7 +16514,7 @@ MonoBehaviour:
   brakingDistance: 1
   forwardOffset: 0
   WaypointHolder: {fileID: 1108994867}
-  currentPowerup: {fileID: 113926639}
+  currentPowerup: {fileID: 0}
 --- !u!1 &1405434748
 GameObject:
   m_ObjectHideFlags: 0
@@ -18842,18 +18794,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 740913878}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1588749892 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5549499189840373577, guid: 96a4a9d4fa603d24e95b81012fde44e7,
-    type: 3}
-  m_PrefabInstance: {fileID: 740913878}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1588749891}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db9524cba03a1094f9cd9902dbd743b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!135 &1588749894
 SphereCollider:
   m_ObjectHideFlags: 0

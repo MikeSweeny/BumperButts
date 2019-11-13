@@ -49,6 +49,12 @@ public class RaceManager : MonoBehaviour
     public Transform p_lastWaypoint;
 
     public List<PickupBox> allPickups;
+    private enum powerupTypes { Speed, Shield, Rocket};
+    public GameObject speedPrefab;
+    private GameObject activePowerup;
+    //public GameObject[] shieldPrefab;
+    //public GameObject[] rocketPrefab;
+    private GameObject[] speedPrefabs;
 
     private void Awake()
     {
@@ -121,6 +127,7 @@ public class RaceManager : MonoBehaviour
         nextWaypoint = new Transform[cars.Length];
         waypoint = new Transform[cars.Length];
         laps = new int[cars.Length];
+        speedPrefabs = new GameObject[cars.Length];
         PickupBox[] boxes = (PickupBox[])GameObject.FindObjectsOfType<PickupBox>();
         foreach (PickupBox pickup in boxes)
         {
@@ -136,11 +143,13 @@ public class RaceManager : MonoBehaviour
             respawnTimes[i] = respawnDelay;
             distanceLeftToTravel[i] = float.MaxValue;
             laps[i] = 0;
+            speedPrefabs[i] = Instantiate(speedPrefab, new Vector3(0, 0, 0), Quaternion.identity);
         }
         p_script = p_car.GetComponent<CarController>();
         p_respawnTime = p_respawnDelay;
         p_distanceLeftToTravel = float.MaxValue;
         p_laps = 0;
+
     }
 
     // Update is called once per frame
@@ -234,14 +243,10 @@ public class RaceManager : MonoBehaviour
         }
     }
 
-    public void NewPowerup()
+    public void NewPowerup(CarController script)
     {
-        foreach (PickupBox pickUp in allPickups)
-        {
-            if (pickUp.pickedUp)
-            {
-                pickUp.Despawn();
-            }
-        }
+        //script.SetCurrentPowerup(speedPrefab.GetComponent<SpeedBoost>());
+        activePowerup = Instantiate(speedPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        script.SetCurrentPowerup(activePowerup);
     }
 }

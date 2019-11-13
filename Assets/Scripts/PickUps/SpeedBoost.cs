@@ -22,11 +22,6 @@ public class SpeedBoost : Powerup
     // Update is called once per frame
     void Update()
     {
-        if (triggered)
-        {
-            Fire();
-            triggered = false;
-        }
         if (fired)
         {
             currentTime += Time.deltaTime;
@@ -47,18 +42,20 @@ public class SpeedBoost : Powerup
             AIScript.topSpeed /= speedMultiplier / 1.5f;
             AIScript.maxTorque /= speedMultiplier;
             AIScript.decelerationTorque /= speedMultiplier;
+
+            //AIScript.currentPowerup = null;
         }
         if (CarScript = targetCar.gameObject.GetComponent<CarController>())
         {
             CarScript.topSpeed /= speedMultiplier / 1.5f;
             CarScript.maxTorque /= speedMultiplier;
             CarScript.decelerationTorque /= speedMultiplier;
+            CarScript.currentPowerup = null;
         }
     }
 
-    protected override void Fire()
+    public override void Fire()
     {
-        base.Fire();
         GiveSpeedBoost(target);
         fired = true;
     }

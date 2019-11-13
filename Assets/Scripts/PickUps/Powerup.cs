@@ -20,7 +20,7 @@ public class Powerup : MonoBehaviour
         
     }
 
-    protected virtual void Fire()
+    public virtual void Fire()
     {
 
     }
