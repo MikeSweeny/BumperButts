@@ -48,7 +48,7 @@ public class RaceManager : MonoBehaviour
     public Transform p_nextWaypoint;
     public Transform p_lastWaypoint;
 
-    public PickupBox[] allPickups;
+    public List<PickupBox> allPickups;
 
     private void Awake()
     {
@@ -121,6 +121,11 @@ public class RaceManager : MonoBehaviour
         nextWaypoint = new Transform[cars.Length];
         waypoint = new Transform[cars.Length];
         laps = new int[cars.Length];
+        PickupBox[] boxes = (PickupBox[])GameObject.FindObjectsOfType<PickupBox>();
+        foreach (PickupBox pickup in boxes)
+        {
+            allPickups.Add(pickup);
+        }
 
         //initialize the arrays with starting values
         for (int i = 0; i < respawnTimes.Length; i++)
@@ -192,15 +197,6 @@ public class RaceManager : MonoBehaviour
             SceneManager.LoadScene("RaceLevel");
         }
 
-        // POWERUPS
-        foreach (PickupBox pickUp in allPickups)
-        {
-            if (pickUp.pickedUp)
-            {
-
-                Destroy(pickUp.gameObject);
-            }
-        }
 
     }
     public void PlayerRespawn(Transform p_last, Transform p_next)
@@ -234,6 +230,17 @@ public class RaceManager : MonoBehaviour
             {
                 laps[i]++;
                 break;
+            }
+        }
+    }
+
+    public void NewPowerup()
+    {
+        foreach (PickupBox pickUp in allPickups)
+        {
+            if (pickUp.pickedUp)
+            {
+                pickUp.Despawn();
             }
         }
     }

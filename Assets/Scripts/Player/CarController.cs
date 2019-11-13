@@ -202,4 +202,16 @@ public class CarController : MonoBehaviour
         }
         return waypoints[currentWaypoint - 1];
     }
+
+    PickupBox pickup;
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (pickup = other.gameObject.GetComponent<PickupBox>())
+        {
+            Debug.Log("GotPowerup");
+            pickup.pickedUp = true;
+            RaceManager.Instance.NewPowerup();
+        }
+    }
 }
