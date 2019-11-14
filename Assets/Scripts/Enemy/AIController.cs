@@ -67,10 +67,18 @@ public class AIController : MonoBehaviour
         // Waypoint checking
         Vector3 RelativeWaypointPosition = transform.InverseTransformPoint(new Vector3(waypoints[currentWaypoint].position.x, transform.position.y, waypoints[currentWaypoint].position.z));
         inputSteer = RelativeWaypointPosition.x / RelativeWaypointPosition.magnitude;
+        if (RelativeWaypointPosition.magnitude < 15)
+        {
+            currentWaypoint++;
+            if (currentWaypoint >= waypoints.Length)
+            {
+                currentWaypoint = 0;
+                RaceManager.Instance.LapFinishedByAI(this);
+            }
+        }
 
-        //front wheel steering
-        WheelCollider_FrontRight.steerAngle = Input.GetAxis("Horizontal") * maxTurnAngle;
-        WheelCollider_FrontLeft.steerAngle = Input.GetAxis("Horizontal") * maxTurnAngle;
+        WheelCollider_FrontLeft.steerAngle = inputSteer * maxTurnAngle;
+        WheelCollider_FrontRight.steerAngle = inputSteer * maxTurnAngle;
 
         //spoiler
         Vector3 localVelocity = transform.InverseTransformDirection(body.velocity);
@@ -110,18 +118,6 @@ public class AIController : MonoBehaviour
             SetSlipValues(1f, 1f);
         }
 
-        if (RelativeWaypointPosition.magnitude < 15)
-        {
-            currentWaypoint++;
-            if (currentWaypoint >= waypoints.Length)
-            {
-                currentWaypoint = 0;
-                RaceManager.Instance.LapFinishedByAI(this);
-            }
-        }
-
-        WheelCollider_FrontLeft.steerAngle = inputSteer * maxTurnAngle;
-        WheelCollider_FrontRight.steerAngle = inputSteer * maxTurnAngle;
 
         // KM/H
         currentSpeed = WheelCollider_BackLeft.radius * WheelCollider_BackLeft.rpm * Mathf.PI * 0.12f;
@@ -157,7 +153,7 @@ public class AIController : MonoBehaviour
             }
         }
 
-        // If hit by a butt or a rocket
+        // Respawning after hitting rocket or big butt with delay
         if (flying)
         {
             deathTimer++;
@@ -169,7 +165,6 @@ public class AIController : MonoBehaviour
                 flying = false;
             }
         }
-
     }
 
 

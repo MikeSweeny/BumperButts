@@ -62,6 +62,12 @@ public class CarController : MonoBehaviour
         // Keeping your thicc butt attached to your car
         ButtShieldMesh.transform.position = gameObject.transform.position;
         ButtShieldMesh.transform.rotation = gameObject.transform.rotation;
+     
+        // Pause button
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            RaceManager.Instance.TogglePause();
+        }
     }
 
     private void FixedUpdate()
@@ -129,6 +135,7 @@ public class CarController : MonoBehaviour
             WheelCollider_FrontRight.brakeTorque = 0;
             SetSlipValues(1f, 1f);
         }
+
         // Waypoint tracking
         Vector3 RelativeWaypointPosition = transform.InverseTransformPoint(new Vector3(waypoints[currentWaypoint].position.x, transform.position.y, waypoints[currentWaypoint].position.z));
         if (RelativeWaypointPosition.magnitude < 25)
@@ -172,6 +179,8 @@ public class CarController : MonoBehaviour
                 flying = false;
             }
         }
+
+
     }
 
     // Handbrake Slip

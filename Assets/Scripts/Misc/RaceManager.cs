@@ -64,6 +64,12 @@ public class RaceManager : MonoBehaviour
     //private GameObject p_rocketPrefab;
     //private GameObject[] rocketPrefabs;
 
+    public bool m_isPaused = false;
+    public GameObject m_pauseMenu;
+    public GameObject m_startMenu;
+    public GameObject m_winMenu;
+    public GameObject m_loseMenu;
+
     private void Awake()
     {
         if (instance != null && instance != this)
@@ -190,7 +196,8 @@ public class RaceManager : MonoBehaviour
             }
             if (laps[i] == 4)
             {
-                SceneManager.LoadScene("RaceLevel");
+                TogglePause();
+
             }
         }
         // Player lap navigate logic
@@ -214,7 +221,7 @@ public class RaceManager : MonoBehaviour
         }
         if (p_laps >= 4)
         {
-            SceneManager.LoadScene("RaceLevel");
+            SceneManager.LoadScene("MainMenu");
         }
 
 
@@ -264,5 +271,42 @@ public class RaceManager : MonoBehaviour
     {
         activePowerup = shieldPrefabs[script.gameObject.GetComponent<AIComponent>().thisCarNum];
         script.SetCurrentPowerup(activePowerup);
+    }
+
+    public void StartGame()
+    {
+        SceneManager.LoadScene("RaceLevel");
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
+
+    public void TogglePause()
+    {
+        Debug.Log("Pause Toggled");
+        if (RaceManager.Instance.m_isPaused)
+        {
+            UnPauseGame();
+        }
+        else if (!(RaceManager.Instance.m_isPaused))
+        {
+            PauseGame();
+        }
+    }
+
+    public void PauseGame()
+    {
+        Time.timeScale = 0;
+        RaceManager.Instance.m_isPaused = true;
+        RaceManager.Instance.m_pauseMenu.SetActive(true);
+    }
+
+    public void UnPauseGame()
+    {
+        Time.timeScale = 1;
+        RaceManager.Instance.m_isPaused = false;
+        RaceManager.Instance.m_pauseMenu.SetActive(false);
     }
 }
