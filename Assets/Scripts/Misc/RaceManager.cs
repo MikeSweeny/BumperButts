@@ -50,11 +50,19 @@ public class RaceManager : MonoBehaviour
 
     public List<PickupBox> allPickups;
     private enum powerupTypes { Speed, Shield, Rocket};
-    public GameObject speedPrefab;
     private GameObject activePowerup;
-    //public GameObject[] shieldPrefab;
-    //public GameObject[] rocketPrefab;
+
+    public GameObject speedPrefab;
+    private GameObject p_speedPrefab;
     private GameObject[] speedPrefabs;
+
+    public GameObject shieldPrefab;
+    private GameObject p_shieldPrefab;
+    private GameObject[] shieldPrefabs;
+
+    public GameObject rocketPrefab;
+    private GameObject p_rocketPrefab;
+    //private GameObject[] rocketPrefabs;
 
     private void Awake()
     {
@@ -144,12 +152,15 @@ public class RaceManager : MonoBehaviour
             distanceLeftToTravel[i] = float.MaxValue;
             laps[i] = 0;
             speedPrefabs[i] = Instantiate(speedPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+            shieldPrefabs[i] = Instantiate(shieldPrefab, new Vector3(0, 0, 0), Quaternion.identity);
         }
         p_script = p_car.GetComponent<CarController>();
         p_respawnTime = p_respawnDelay;
         p_distanceLeftToTravel = float.MaxValue;
         p_laps = 0;
 
+        p_speedPrefab = Instantiate(speedPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        p_shieldPrefab = Instantiate(shieldPrefab, new Vector3(0, 0, 0), Quaternion.identity);
     }
 
     // Update is called once per frame
@@ -245,8 +256,13 @@ public class RaceManager : MonoBehaviour
 
     public void NewPowerup(CarController script)
     {
-        //script.SetCurrentPowerup(speedPrefab.GetComponent<SpeedBoost>());
-        activePowerup = Instantiate(speedPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        activePowerup = p_shieldPrefab;
+        script.SetCurrentPowerup(activePowerup);
+    }
+
+    public void NewPowerup(AIController script)
+    {
+        activePowerup = shieldPrefabs[script.gameObject.GetComponent<AIComponent>().thisCarNum];
         script.SetCurrentPowerup(activePowerup);
     }
 }

@@ -40,6 +40,7 @@ public class CarController : MonoBehaviour
     //public Powerup currentPowerup;
     public GameObject currentPowerup;
     private PickupBox pickup;
+    private float flyingSpeedRatio = 15f;
 
     // Start is called before the first frame update
     void Start()
@@ -137,15 +138,20 @@ public class CarController : MonoBehaviour
         // Using Powerup
         if (Input.GetKeyDown(KeyCode.E))
         {
-            SpeedBoost activePowerup;
+            SpeedBoost activePowerup_Speed;
+            ButtShield activePowerup_Shield;
             if (currentPowerup != null)
             {
-                if (activePowerup = currentPowerup.gameObject.GetComponent<SpeedBoost>())
+                if (activePowerup_Speed = currentPowerup.gameObject.GetComponent<SpeedBoost>())
                 {
-                    activePowerup.SetTarget(this.gameObject);
-                    activePowerup.Fire();
+                    activePowerup_Speed.SetTarget(this.gameObject);
+                    activePowerup_Speed.Fire();
                 }
-
+                if (activePowerup_Shield = currentPowerup.gameObject.GetComponent<ButtShield>())
+                {
+                    activePowerup_Shield.SetTarget(this.gameObject);
+                    activePowerup_Shield.Fire();
+                }
             }
         }
     }
@@ -229,5 +235,16 @@ public class CarController : MonoBehaviour
                 RaceManager.Instance.NewPowerup(this);
             }
         }
+        if (other.gameObject.CompareTag("ButtShield"))
+        {
+            GoFlying();
+        }
+    }
+
+    private void GoFlying()
+    {
+        Vector3 localVelocity = transform.InverseTransformDirection(body.velocity);
+        body.AddForce(transform.up * (localVelocity.z * spoilerRatio), ForceMode.Impulse);
+        body.AddForce(-transform.forward * (localVelocity.x * flyingSpeedRatio), ForceMode.Impulse);
     }
 }

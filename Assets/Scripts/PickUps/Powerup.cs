@@ -8,6 +8,12 @@ public class Powerup : MonoBehaviour
     public bool triggered = false;
     protected GameObject target;
 
+    protected AIController AIScript;
+    protected CarController CarScript;
+
+    protected float duration;
+    protected float currentTime = 0;
+
     // Start is called before the first frame update
     void Start()
     {

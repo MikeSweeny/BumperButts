@@ -5,18 +5,12 @@ using UnityEngine;
 
 public class SpeedBoost : Powerup
 {
-    private float duration = 3;
     private float speedMultiplier = 3f;
-    private float currentTime;
-
-
-    private AIController AIScript;
-    private CarController CarScript;
 
     // Start is called before the first frame update
     void Start()
     {
-        currentTime = 0;
+        duration = 3f;
     }
 
     // Update is called once per frame
@@ -32,7 +26,12 @@ public class SpeedBoost : Powerup
                 currentTime = 0;
             }
         }
+    }
 
+    public override void Fire()
+    {
+        GiveSpeedBoost(target);
+        fired = true;
     }
 
     private void ResetSpeed(GameObject targetCar)
@@ -52,12 +51,6 @@ public class SpeedBoost : Powerup
             CarScript.decelerationTorque /= speedMultiplier;
             CarScript.currentPowerup = null;
         }
-    }
-
-    public override void Fire()
-    {
-        GiveSpeedBoost(target);
-        fired = true;
     }
 
     private void GiveSpeedBoost(GameObject targetCar)

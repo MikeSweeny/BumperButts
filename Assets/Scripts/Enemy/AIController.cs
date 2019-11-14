@@ -37,6 +37,11 @@ public class AIController : MonoBehaviour
     private Transform[] waypoints;
     private int currentWaypoint = 0;
 
+    public GameObject currentPowerup;
+    private PickupBox pickup;
+    private float flyingSpeedRatio = 15f;
+    private bool useAbility = false;
+
     private void Start()
     {
         body = GetComponent<Rigidbody>();
@@ -127,6 +132,24 @@ public class AIController : MonoBehaviour
             WheelCollider_BackRight.motorTorque = 0;
         }
 
+        if (useAbility)
+        {
+            SpeedBoost activePowerup_Speed;
+            ButtShield activePowerup_Shield;
+            if (currentPowerup != null)
+            {
+                if (activePowerup_Speed = currentPowerup.gameObject.GetComponent<SpeedBoost>())
+                {
+                    activePowerup_Speed.SetTarget(this.gameObject);
+                    activePowerup_Speed.Fire();
+                }
+                if (activePowerup_Shield = currentPowerup.gameObject.GetComponent<ButtShield>())
+                {
+                    activePowerup_Shield.SetTarget(this.gameObject);
+                    activePowerup_Shield.Fire();
+                }
+            }
+        }
 
     }
 
@@ -202,5 +225,34 @@ public class AIController : MonoBehaviour
         }
 
         return 1f;
+    }
+
+    public void SetCurrentPowerup(GameObject newPowerup)
+    {
+        currentPowerup = newPowerup;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (currentPowerup == null)
+        {
+            if (pickup = other.gameObject.GetComponent<PickupBox>())
+            {
+                Debug.Log("GotPowerup");
+                pickup.Despawn();
+                RaceManager.Instance.NewPowerup(this);
+            }
+        }
+        if (other.gameObject.CompareTag("ButtShield"))
+        {
+            GoFlying();
+        }
+    }
+
+    private void GoFlying()
+    {
+        Vector3 localVelocity = transform.InverseTransformDirection(body.velocity);
+        body.AddForce(transform.up * (localVelocity.z * spoilerRatio), ForceMode.Impulse);
+        body.AddForce(-transform.forward * (localVelocity.x * flyingSpeedRatio), ForceMode.Impulse);
     }
 }
