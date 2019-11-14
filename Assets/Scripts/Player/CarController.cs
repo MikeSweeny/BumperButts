@@ -165,7 +165,7 @@ public class CarController : MonoBehaviour
         if (flying)
         {
             deathTimer++;
-            if (deathTimer >= 100)
+            if (deathTimer >= 200)
             {
                 RaceManager.Instance.PlayerRespawn(RaceManager.Instance.p_lastWaypoint, RaceManager.Instance.p_nextWaypoint);
                 deathTimer = 0;
@@ -253,7 +253,9 @@ public class CarController : MonoBehaviour
                 RaceManager.Instance.NewPowerup(this);
             }
         }
-        if (other.gameObject.CompareTag("ButtShield"))
+        if (other.gameObject.CompareTag("ButtShield") &&
+            other.gameObject != gameObject.transform.GetChild(1).transform.GetChild(0).gameObject &&
+            other.gameObject != gameObject.transform.GetChild(1).transform.GetChild(1).gameObject)
         {
             GoFlying();
         }

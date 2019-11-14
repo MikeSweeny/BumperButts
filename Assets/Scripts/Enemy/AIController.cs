@@ -161,7 +161,7 @@ public class AIController : MonoBehaviour
         if (flying)
         {
             deathTimer++;
-            if (deathTimer >= 100)
+            if (deathTimer >= 200)
             {
                 int i = this.gameObject.GetComponent<AIComponent>().thisCarNum;
                 RaceManager.Instance.AIRespawn(RaceManager.Instance.lastWaypoint[i], RaceManager.Instance.nextWaypoint[i], i);
@@ -262,7 +262,9 @@ public class AIController : MonoBehaviour
                 RaceManager.Instance.NewPowerup(this);
             }
         }
-        if (other.gameObject.CompareTag("ButtShield"))
+        if (other.gameObject.CompareTag("ButtShield") &&
+            other.gameObject != gameObject.transform.GetChild(1).transform.GetChild(0).gameObject &&
+            other.gameObject != gameObject.transform.GetChild(1).transform.GetChild(1).gameObject)
         {
             GoFlying();
         }
