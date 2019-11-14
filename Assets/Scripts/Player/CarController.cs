@@ -42,7 +42,7 @@ public class CarController : MonoBehaviour
     public GameObject currentPowerup;
     private PickupBox pickup;
     private bool flying = false;
-    private float flyingSpeedRatio = 1000f;
+    private float flyingSpeedRatio = 700f;
     private int deathTimer = 0;
 
     // Start is called before the first frame update
@@ -162,11 +162,10 @@ public class CarController : MonoBehaviour
         }
 
         // Respawning after hitting rocket or big butt with delay
-        // If hit by a butt or a rocket
         if (flying)
         {
             deathTimer++;
-            if (deathTimer >= 200)
+            if (deathTimer >= 100)
             {
                 RaceManager.Instance.PlayerRespawn(RaceManager.Instance.p_lastWaypoint, RaceManager.Instance.p_nextWaypoint);
                 deathTimer = 0;
@@ -254,11 +253,7 @@ public class CarController : MonoBehaviour
                 RaceManager.Instance.NewPowerup(this);
             }
         }
-    }
-
-    private void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        if (hit.gameObject.CompareTag("ButtShield"))
+        if (other.gameObject.CompareTag("ButtShield"))
         {
             GoFlying();
         }
@@ -267,7 +262,7 @@ public class CarController : MonoBehaviour
     public void GoFlying()
     {
         Vector3 localVelocity = transform.InverseTransformDirection(body.velocity);
-        body.AddForce(transform.up * (localVelocity.z * spoilerRatio), ForceMode.Impulse);
+        body.AddForce(transform.up * (localVelocity.z * flyingSpeedRatio), ForceMode.Impulse);
         flying = true;
     }
 }

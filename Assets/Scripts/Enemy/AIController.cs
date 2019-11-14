@@ -41,7 +41,7 @@ public class AIController : MonoBehaviour
     public GameObject currentPowerup;
     private PickupBox pickup;
     private bool flying = false;
-    private float flyingSpeedRatio = 1000f;
+    private float flyingSpeedRatio = 700f;
     private bool useAbility = false;
     private int deathTimer = 0;
 
@@ -161,7 +161,7 @@ public class AIController : MonoBehaviour
         if (flying)
         {
             deathTimer++;
-            if (deathTimer >= 200)
+            if (deathTimer >= 100)
             {
                 int i = this.gameObject.GetComponent<AIComponent>().thisCarNum;
                 RaceManager.Instance.AIRespawn(RaceManager.Instance.lastWaypoint[i], RaceManager.Instance.nextWaypoint[i], i);
@@ -263,14 +263,6 @@ public class AIController : MonoBehaviour
             }
         }
         if (other.gameObject.CompareTag("ButtShield"))
-        {
-            GoFlying();
-        }
-    }
-
-    private void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        if (hit.gameObject.CompareTag("ButtShield"))
         {
             GoFlying();
         }
