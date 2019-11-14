@@ -12,6 +12,7 @@ public class AIController : MonoBehaviour
     public WheelCollider WheelCollider_FrontRight;
     public WheelCollider WheelCollider_BackLeft;
     public WheelCollider WheelCollider_BackRight;
+    public GameObject ButtShieldMesh;
 
     public float maxTurnAngle = 10;
     public float maxTorque = 10;
@@ -39,8 +40,10 @@ public class AIController : MonoBehaviour
 
     public GameObject currentPowerup;
     private PickupBox pickup;
-    private float flyingSpeedRatio = 15f;
+    private bool flying = false;
+    private float flyingSpeedRatio = 1000f;
     private bool useAbility = false;
+    private int deathTimer = 0;
 
     private void Start()
     {
@@ -53,7 +56,10 @@ public class AIController : MonoBehaviour
 
     private void Update()
     {
-        UpdateWheelPositions();
+        UpdateWheelPositions();        
+        // Keeping your thicc butt attached to your car
+        ButtShieldMesh.transform.position = gameObject.transform.position;
+        ButtShieldMesh.transform.rotation = gameObject.transform.rotation;
     }
 
     private void FixedUpdate()
@@ -148,6 +154,19 @@ public class AIController : MonoBehaviour
                     activePowerup_Shield.SetTarget(this.gameObject);
                     activePowerup_Shield.Fire();
                 }
+            }
+        }
+
+        // If hit by a butt or a rocket
+        if (flying)
+        {
+            deathTimer++;
+            if (deathTimer >= 200)
+            {
+                int i = this.gameObject.GetComponent<AIComponent>().thisCarNum;
+                RaceManager.Instance.AIRespawn(RaceManager.Instance.lastWaypoint[i], RaceManager.Instance.nextWaypoint[i], i);
+                deathTimer = 0;
+                flying = false;
             }
         }
 
@@ -249,10 +268,18 @@ public class AIController : MonoBehaviour
         }
     }
 
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (hit.gameObject.CompareTag("ButtShield"))
+        {
+            GoFlying();
+        }
+    }
+
     private void GoFlying()
     {
         Vector3 localVelocity = transform.InverseTransformDirection(body.velocity);
-        body.AddForce(transform.up * (localVelocity.z * spoilerRatio), ForceMode.Impulse);
-        body.AddForce(-transform.forward * (localVelocity.x * flyingSpeedRatio), ForceMode.Impulse);
+        body.AddForce(transform.up * (localVelocity.z * flyingSpeedRatio), ForceMode.Impulse);
+        flying = true;
     }
 }

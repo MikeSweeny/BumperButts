@@ -49,4 +49,19 @@ public class ButtShield : Powerup
     {
         targetCar.transform.GetChild(1).gameObject.SetActive(true);
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Car"))
+        {
+            if (AIScript = other.gameObject.GetComponent<AIController>())
+            {
+                //AIScript.currentPowerup = null;
+            }
+            if (CarScript = other.gameObject.GetComponent<CarController>())
+            {
+                CarScript.GoFlying();
+            }
+        }
+    }
 }

@@ -60,8 +60,8 @@ public class RaceManager : MonoBehaviour
     private GameObject p_shieldPrefab;
     private GameObject[] shieldPrefabs;
 
-    public GameObject rocketPrefab;
-    private GameObject p_rocketPrefab;
+    //public GameObject rocketPrefab;
+    //private GameObject p_rocketPrefab;
     //private GameObject[] rocketPrefabs;
 
     private void Awake()
@@ -152,7 +152,7 @@ public class RaceManager : MonoBehaviour
             distanceLeftToTravel[i] = float.MaxValue;
             laps[i] = 0;
             speedPrefabs[i] = Instantiate(speedPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-            shieldPrefabs[i] = Instantiate(shieldPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+            //shieldPrefabs[i] = Instantiate(shieldPrefab, new Vector3(0, 0, 0), Quaternion.identity);
         }
         p_script = p_car.GetComponent<CarController>();
         p_respawnTime = p_respawnDelay;

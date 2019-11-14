@@ -3920,13 +3920,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 237629627}
+  - component: {fileID: 237629628}
   m_Layer: 0
   m_Name: ButtShield
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &237629627
 Transform:
   m_ObjectHideFlags: 0
@@ -3943,6 +3944,22 @@ Transform:
   m_Father: {fileID: 966536469}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &237629628
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 237629626}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &239262467
 GameObject:
   m_ObjectHideFlags: 0
@@ -8429,6 +8446,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 657429653}
+  - component: {fileID: 657429654}
   m_Layer: 0
   m_Name: ButtShield
   m_TagString: Untagged
@@ -8452,6 +8470,22 @@ Transform:
   m_Father: {fileID: 2030986651}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &657429654
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 657429652}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &670333458
 GameObject:
   m_ObjectHideFlags: 0
@@ -10522,7 +10556,6 @@ MonoBehaviour:
     type: 3}
   shieldPrefab: {fileID: 8672051725494419769, guid: cd69135a21cd8f0468c967db7ee85c47,
     type: 3}
-  rocketPrefab: {fileID: 0}
 --- !u!4 &828243245
 Transform:
   m_ObjectHideFlags: 0
@@ -11429,7 +11462,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -12041,6 +12074,7 @@ MonoBehaviour:
   WheelCollider_FrontRight: {fileID: 1245199086}
   WheelCollider_BackLeft: {fileID: 1004865384}
   WheelCollider_BackRight: {fileID: 1452735490}
+  ButtShieldMesh: {fileID: 237629626}
   maxTurnAngle: 15
   maxTorque: 300
   topSpeed: 750
@@ -12959,6 +12993,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1079391702}
+  - component: {fileID: 1079391703}
   m_Layer: 0
   m_Name: ButtShield
   m_TagString: Untagged
@@ -12982,6 +13017,22 @@ Transform:
   m_Father: {fileID: 1355880494}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &1079391703
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1079391701}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1088600477
 GameObject:
   m_ObjectHideFlags: 0
@@ -13284,6 +13335,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1115519478}
+  - component: {fileID: 1115519479}
   m_Layer: 0
   m_Name: ButtShield
   m_TagString: Untagged
@@ -13307,6 +13359,22 @@ Transform:
   m_Father: {fileID: 1277745981}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &1115519479
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1115519477}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1117201065
 GameObject:
   m_ObjectHideFlags: 0
@@ -13841,6 +13909,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1142851044}
+  - component: {fileID: 1142851045}
   m_Layer: 0
   m_Name: ButtShield
   m_TagString: Untagged
@@ -13864,6 +13933,22 @@ Transform:
   m_Father: {fileID: 1280724142}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &1142851045
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1142851043}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1149323337
 GameObject:
   m_ObjectHideFlags: 0
@@ -15902,6 +15987,7 @@ MonoBehaviour:
   WheelCollider_FrontRight: {fileID: 1611974903}
   WheelCollider_BackLeft: {fileID: 439600628}
   WheelCollider_BackRight: {fileID: 71508971}
+  ButtShieldMesh: {fileID: 1115519477}
   maxTurnAngle: 15
   maxTorque: 400
   topSpeed: 650
@@ -15986,6 +16072,7 @@ MonoBehaviour:
   WheelCollider_FrontRight: {fileID: 558227072}
   WheelCollider_BackLeft: {fileID: 1451163376}
   WheelCollider_BackRight: {fileID: 1580841314}
+  ButtShieldMesh: {fileID: 1142851043}
   maxTurnAngle: 15
   maxTorque: 390
   topSpeed: 625
@@ -16570,6 +16657,7 @@ MonoBehaviour:
   WheelCollider_FrontRight: {fileID: 1367211930}
   WheelCollider_BackLeft: {fileID: 2036396256}
   WheelCollider_BackRight: {fileID: 1326902208}
+  ButtShieldMesh: {fileID: 1079391701}
   maxTurnAngle: 15
   maxTorque: 400
   topSpeed: 600
@@ -17466,7 +17554,7 @@ GameObject:
   - component: {fileID: 1403993813}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Car
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -17525,6 +17613,7 @@ MonoBehaviour:
   WheelCollider_FrontRight: {fileID: 704252068}
   WheelCollider_BackLeft: {fileID: 43349123}
   WheelCollider_BackRight: {fileID: 481327204}
+  ButtShieldMesh: {fileID: 897909484}
   maxTurnAngle: 15
   maxTorque: 425
   topSpeed: 700
@@ -23278,6 +23367,7 @@ MonoBehaviour:
   WheelCollider_FrontRight: {fileID: 1545724997}
   WheelCollider_BackLeft: {fileID: 795167205}
   WheelCollider_BackRight: {fileID: 532950069}
+  ButtShieldMesh: {fileID: 657429652}
   maxTurnAngle: 15
   maxTorque: 500
   topSpeed: 525

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - PickUp
   - ButtShield
+  - Car
   layers:
   - Default
   - TransparentFX
