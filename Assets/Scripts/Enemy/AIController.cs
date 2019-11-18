@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class AIController : MonoBehaviour
 {
+    public int thisCarNum;
+
     public Transform WheelMesh_FrontLeft;
     public Transform WheelMesh_FrontRight;
     public Transform WheelMesh_BackLeft;
@@ -56,113 +58,120 @@ public class AIController : MonoBehaviour
 
     private void Update()
     {
-        UpdateWheelPositions();        
-        // Keeping your thicc butt attached to your car
-        ButtShieldMesh.transform.position = gameObject.transform.position;
-        ButtShieldMesh.transform.rotation = gameObject.transform.rotation;
+        if (RaceManager.Instance.raceStarted)
+        {
+            UpdateWheelPositions();
+            // Keeping your thicc butt attached to your car
+            ButtShieldMesh.transform.position = gameObject.transform.position;
+            ButtShieldMesh.transform.rotation = gameObject.transform.rotation;
+        }
     }
 
     private void FixedUpdate()
     {
-        // Waypoint checking
-        Vector3 RelativeWaypointPosition = transform.InverseTransformPoint(new Vector3(waypoints[currentWaypoint].position.x, transform.position.y, waypoints[currentWaypoint].position.z));
-        inputSteer = RelativeWaypointPosition.x / RelativeWaypointPosition.magnitude;
-        if (RelativeWaypointPosition.magnitude < 15)
+        if (RaceManager.Instance.raceStarted)
         {
-            currentWaypoint++;
-            if (currentWaypoint >= waypoints.Length)
+            // Waypoint checking
+            Vector3 RelativeWaypointPosition = transform.InverseTransformPoint(new Vector3(waypoints[currentWaypoint].position.x, transform.position.y, waypoints[currentWaypoint].position.z));
+            inputSteer = RelativeWaypointPosition.x / RelativeWaypointPosition.magnitude;
+            if (RelativeWaypointPosition.magnitude < 15)
             {
-                currentWaypoint = 0;
-                RaceManager.Instance.LapFinishedByAI(this);
+                currentWaypoint++;
+                if (currentWaypoint >= waypoints.Length)
+                {
+                    currentWaypoint = 0;
+                    RaceManager.Instance.LapFinishedByAI(this);
+                }
             }
-        }
 
-        WheelCollider_FrontLeft.steerAngle = inputSteer * maxTurnAngle;
-        WheelCollider_FrontRight.steerAngle = inputSteer * maxTurnAngle;
+            WheelCollider_FrontLeft.steerAngle = inputSteer * maxTurnAngle;
+            WheelCollider_FrontRight.steerAngle = inputSteer * maxTurnAngle;
 
-        //spoiler
-        Vector3 localVelocity = transform.InverseTransformDirection(body.velocity);
-        body.AddForce(-transform.up * (localVelocity.z * spoilerRatio), ForceMode.Impulse);
+            //spoiler
+            Vector3 localVelocity = transform.InverseTransformDirection(body.velocity);
+            body.AddForce(-transform.up * (localVelocity.z * spoilerRatio), ForceMode.Impulse);
 
-        if (Mathf.Abs(inputSteer) < 0.5f)
-        {
-            inputTorque = RelativeWaypointPosition.z / RelativeWaypointPosition.magnitude;
-            applyHandBrake = false;
-        }
-        else
-        {
-            if (body.velocity.magnitude > 10)
+            if (Mathf.Abs(inputSteer) < 0.5f)
             {
-                applyHandBrake = true;
-            }
-            else if (localVelocity.z > 10)
-            {
+                inputTorque = RelativeWaypointPosition.z / RelativeWaypointPosition.magnitude;
                 applyHandBrake = false;
-                inputTorque = -1;
-                inputSteer *= -1;
             }
             else
             {
-                applyHandBrake = false;
-                inputTorque = 0;
-            }
-        }
-
-        //Hand BRAKE
-        if (applyHandBrake)
-        {
-            SetSlipValues(handBrakeFSlip, handBrakeSSlip);
-        }
-        else
-        {
-            SetSlipValues(1f, 1f);
-        }
-
-
-        // KM/H
-        currentSpeed = WheelCollider_BackLeft.radius * WheelCollider_BackLeft.rpm * Mathf.PI * 0.12f;
-        if (currentSpeed < topSpeed && currentSpeed > maxReverseSpeed)
-        {
-            float adjustment = ForwardRaycast();
-            //rear wheel drive
-            WheelCollider_BackRight.motorTorque = adjustment * inputTorque * maxTorque;
-            WheelCollider_BackLeft.motorTorque = adjustment * inputTorque * maxTorque;
-        }
-        else
-        {
-            WheelCollider_BackLeft.motorTorque = 0;
-            WheelCollider_BackRight.motorTorque = 0;
-        }
-
-        if (useAbility)
-        {
-            SpeedBoost activePowerup_Speed;
-            ButtShield activePowerup_Shield;
-            if (currentPowerup != null)
-            {
-                if (activePowerup_Speed = currentPowerup.gameObject.GetComponent<SpeedBoost>())
+                if (body.velocity.magnitude > 10)
                 {
-                    activePowerup_Speed.SetTarget(this.gameObject);
-                    activePowerup_Speed.Fire();
+                    applyHandBrake = true;
                 }
-                if (activePowerup_Shield = currentPowerup.gameObject.GetComponent<ButtShield>())
+                else if (localVelocity.z > 10)
                 {
-                    activePowerup_Shield.SetTarget(this.gameObject);
-                    activePowerup_Shield.Fire();
+                    applyHandBrake = false;
+                    inputTorque = -1;
+                    inputSteer *= -1;
+                }
+                else
+                {
+                    applyHandBrake = false;
+                    inputTorque = 0;
                 }
             }
-        }
 
-        // Respawning after hitting rocket or big butt with delay
-        if (flying)
-        {
-            deathTimer++;
-            if (deathTimer >= 200)
+            //Hand BRAKE
+            if (applyHandBrake)
             {
-                int i = this.gameObject.GetComponent<AIComponent>().thisCarNum;
-                RaceManager.Instance.AIRespawn(RaceManager.Instance.lastWaypoint[i], RaceManager.Instance.nextWaypoint[i], i);
-                deathTimer = 0;
-                flying = false;
+                SetSlipValues(handBrakeFSlip, handBrakeSSlip);
+            }
+            else
+            {
+                SetSlipValues(1f, 1f);
+            }
+
+
+            // KM/H
+            currentSpeed = WheelCollider_BackLeft.radius * WheelCollider_BackLeft.rpm * Mathf.PI * 0.12f;
+            if (currentSpeed < topSpeed && currentSpeed > maxReverseSpeed)
+            {
+                float adjustment = ForwardRaycast();
+                //rear wheel drive
+                WheelCollider_BackRight.motorTorque = adjustment * inputTorque * maxTorque;
+                WheelCollider_BackLeft.motorTorque = adjustment * inputTorque * maxTorque;
+            }
+            else
+            {
+                WheelCollider_BackLeft.motorTorque = 0;
+                WheelCollider_BackRight.motorTorque = 0;
+            }
+
+            if (useAbility)
+            {
+                SpeedBoost activePowerup_Speed;
+                ButtShield activePowerup_Shield;
+                if (currentPowerup != null)
+                {
+                    if (activePowerup_Speed = currentPowerup.gameObject.GetComponent<SpeedBoost>())
+                    {
+                        activePowerup_Speed.SetTarget(this.gameObject);
+                        activePowerup_Speed.Fire();
+                    }
+                    if (activePowerup_Shield = currentPowerup.gameObject.GetComponent<ButtShield>())
+                    {
+                        activePowerup_Shield.SetTarget(this.gameObject);
+                        activePowerup_Shield.Fire();
+                    }
+                    useAbility = false;
+                }
+            }
+
+            // Respawning after hitting rocket or big butt with delay
+            if (flying)
+            {
+                deathTimer++;
+                if (deathTimer >= 200)
+                {
+                    int i = thisCarNum;
+                    RaceManager.Instance.AIRespawn(RaceManager.Instance.lastWaypoint[i], RaceManager.Instance.nextWaypoint[i], i);
+                    deathTimer = 0;
+                    flying = false;
+                }
             }
         }
     }
@@ -218,6 +227,11 @@ public class AIController : MonoBehaviour
     {
         return waypoints[currentWaypoint];
     }
+
+    public int GetCurrentWaypointInt()
+    {
+        return currentWaypoint;
+    }
     public Transform GetLastWaypoint()
     {
         if (currentWaypoint - 1 < 0)
@@ -244,6 +258,7 @@ public class AIController : MonoBehaviour
     public void SetCurrentPowerup(GameObject newPowerup)
     {
         currentPowerup = newPowerup;
+        useAbility = true;
     }
 
     private void OnTriggerEnter(Collider other)

@@ -8,7 +8,7 @@ public class ButtRocket : Powerup
     private Transform[] waypoints;
     public Transform waypointHolder;
     private int currentWaypoint = 0;
-    private float flightSpeed = 0.0000005f;
+    private float flightSpeed = 0.005f;
 
     public Vector3 location;
 

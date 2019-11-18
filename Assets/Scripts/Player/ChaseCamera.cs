@@ -28,13 +28,13 @@ public class ChaseCamera : MonoBehaviour
         // if backing up
         if (Input.GetKey(KeyCode.S))
         {
-            desiredAngle += 180;
+            Vector3 localVelocity = car.InverseTransformDirection(car.GetComponent<Rigidbody>().velocity);
+            if (localVelocity.z < -0.5f)
+            {
+                desiredAngle += 180;
+            }
         }
-        //Vector3 localVelocity = car.InverseTransformDirection(car.GetComponent<Rigidbody>().velocity);
-        //if (localVelocity.z < -0.5f)
-        //{
-        //    desiredAngle += 180;
-        //}
+
 
         float desiredHeight = car.position.y + height;
 

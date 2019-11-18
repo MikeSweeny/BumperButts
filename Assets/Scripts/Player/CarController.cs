@@ -34,7 +34,7 @@ public class CarController : MonoBehaviour
     private float spoilerRatio = 2f;
     private bool applyHandBrake = false;
     private Transform[] waypoints;
-    private int currentWaypoint = 0;
+    public int currentWaypoint = 0;
     private float inputSteer;
     private float inputTorque;
 
@@ -58,129 +58,132 @@ public class CarController : MonoBehaviour
     // Update is called once per frame
     void Update()
     { 
-        UpdateWheelPositions();
-        // Keeping your thicc butt attached to your car
-        ButtShieldMesh.transform.position = gameObject.transform.position;
-        ButtShieldMesh.transform.rotation = gameObject.transform.rotation;
-     
-        // Pause button
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (RaceManager.Instance.raceStarted)
         {
-            RaceManager.Instance.TogglePause();
+            // Pause button
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                RaceManager.Instance.TogglePause();
+            }
+            UpdateWheelPositions();
+            // Keeping your thicc butt attached to your car
+            ButtShieldMesh.transform.position = gameObject.transform.position;
+            ButtShieldMesh.transform.rotation = gameObject.transform.rotation;
         }
     }
 
     private void FixedUpdate()
     {
-        //front wheel steering
-        WheelCollider_FrontRight.steerAngle = Input.GetAxis("Horizontal") * maxTurnAngle;
-        WheelCollider_FrontLeft.steerAngle = Input.GetAxis("Horizontal") * maxTurnAngle;
-        
-        //spoiler
-        Vector3 localVelocity = transform.InverseTransformDirection(body.velocity);
-        body.AddForce(-transform.up * (localVelocity.z * spoilerRatio), ForceMode.Impulse);
+        if (RaceManager.Instance.raceStarted)
+        {
+            //front wheel steering
+            WheelCollider_FrontRight.steerAngle = Input.GetAxis("Horizontal") * maxTurnAngle;
+            WheelCollider_FrontLeft.steerAngle = Input.GetAxis("Horizontal") * maxTurnAngle;
 
-        //braking
-        if (!applyHandBrake && (Input.GetAxis("Vertical") <= -0.5f && localVelocity.z > 0 || (Input.GetAxis("Vertical") <= -0.5f && localVelocity.z > 0)))
-        {
-            WheelCollider_BackLeft.brakeTorque = decelerationTorque + maxTorque;
-            WheelCollider_BackRight.brakeTorque = decelerationTorque + maxTorque;
-        }
-        else if (!applyHandBrake && (Input.GetAxis("Vertical") == 0))
-        {
-            WheelCollider_BackLeft.brakeTorque = decelerationTorque;
-            WheelCollider_BackRight.brakeTorque = decelerationTorque;
-        }
-        else
-        {
-            WheelCollider_BackLeft.brakeTorque = 0;
-            WheelCollider_BackRight.brakeTorque = 0;
-        }
+            //spoiler
+            Vector3 localVelocity = transform.InverseTransformDirection(body.velocity);
+            body.AddForce(-transform.up * (localVelocity.z * spoilerRatio), ForceMode.Impulse);
 
-        // KM/H
-        currentSpeed = WheelCollider_BackLeft.radius * WheelCollider_BackRight.rpm * Mathf.PI * 0.12f;
-        if (currentSpeed < topSpeed && currentSpeed > maxReverseSpeed)
-        {
-            //rear wheel drive
-            WheelCollider_BackRight.motorTorque = Input.GetAxis("Vertical") * maxTorque;
-            WheelCollider_BackLeft.motorTorque = Input.GetAxis("Vertical") * maxTorque;
-        }
-        else
-        {
-            WheelCollider_BackLeft.motorTorque = 0;
-            WheelCollider_BackRight.motorTorque = 0;
-        }
-
-        //Hand BRAKE
-        if (Input.GetButton("Jump"))
-        {
-            applyHandBrake = true;
-            WheelCollider_FrontLeft.brakeTorque = maxBrakeTorque;
-            WheelCollider_FrontRight.brakeTorque = maxBrakeTorque;
-
-            //Powerslide
-            if (GetComponent<Rigidbody>().velocity.magnitude > 1)
+            //braking
+            if (!applyHandBrake && (Input.GetAxis("Vertical") <= -0.5f && localVelocity.z > 0 || (Input.GetAxis("Vertical") <= -0.5f && localVelocity.z > 0)))
             {
-                SetSlipValues(handBrakeForwardSlip, handBrakeSidewaysSlip);
+                WheelCollider_BackLeft.brakeTorque = decelerationTorque + maxTorque;
+                WheelCollider_BackRight.brakeTorque = decelerationTorque + maxTorque;
+            }
+            else if (!applyHandBrake && (Input.GetAxis("Vertical") == 0))
+            {
+                WheelCollider_BackLeft.brakeTorque = decelerationTorque;
+                WheelCollider_BackRight.brakeTorque = decelerationTorque;
             }
             else
             {
+                WheelCollider_BackLeft.brakeTorque = 0;
+                WheelCollider_BackRight.brakeTorque = 0;
+            }
+
+            // KM/H
+            currentSpeed = WheelCollider_BackLeft.radius * WheelCollider_BackRight.rpm * Mathf.PI * 0.12f;
+            if (currentSpeed < topSpeed && currentSpeed > maxReverseSpeed)
+            {
+                //rear wheel drive
+                WheelCollider_BackRight.motorTorque = Input.GetAxis("Vertical") * maxTorque;
+                WheelCollider_BackLeft.motorTorque = Input.GetAxis("Vertical") * maxTorque;
+            }
+            else
+            {
+                WheelCollider_BackLeft.motorTorque = 0;
+                WheelCollider_BackRight.motorTorque = 0;
+            }
+
+            //Hand BRAKE
+            if (Input.GetButton("Jump"))
+            {
+                applyHandBrake = true;
+                WheelCollider_FrontLeft.brakeTorque = maxBrakeTorque;
+                WheelCollider_FrontRight.brakeTorque = maxBrakeTorque;
+
+                //Powerslide
+                if (GetComponent<Rigidbody>().velocity.magnitude > 1)
+                {
+                    SetSlipValues(handBrakeForwardSlip, handBrakeSidewaysSlip);
+                }
+                else
+                {
+                    SetSlipValues(1f, 1f);
+                }
+            }
+            else
+            {
+                applyHandBrake = false;
+                WheelCollider_FrontLeft.brakeTorque = 0;
+                WheelCollider_FrontRight.brakeTorque = 0;
                 SetSlipValues(1f, 1f);
             }
-        }
-        else
-        {
-            applyHandBrake = false;
-            WheelCollider_FrontLeft.brakeTorque = 0;
-            WheelCollider_FrontRight.brakeTorque = 0;
-            SetSlipValues(1f, 1f);
-        }
 
-        // Waypoint tracking
-        Vector3 RelativeWaypointPosition = transform.InverseTransformPoint(new Vector3(waypoints[currentWaypoint].position.x, transform.position.y, waypoints[currentWaypoint].position.z));
-        if (RelativeWaypointPosition.magnitude < 25)
-        {
-            currentWaypoint++;
-            if (currentWaypoint >= waypoints.Length)
+            // Waypoint tracking
+            Vector3 RelativeWaypointPosition = transform.InverseTransformPoint(new Vector3(waypoints[currentWaypoint].position.x, transform.position.y, waypoints[currentWaypoint].position.z));
+            if (RelativeWaypointPosition.magnitude < 25)
             {
-                currentWaypoint = 0;
-                RaceManager.Instance.LapFinishedByPlayer(this);
-            }
-        }
-
-        // Using Powerup
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            SpeedBoost activePowerup_Speed;
-            ButtShield activePowerup_Shield;
-            if (currentPowerup != null)
-            {
-                if (activePowerup_Speed = currentPowerup.gameObject.GetComponent<SpeedBoost>())
+                currentWaypoint++;
+                if (currentWaypoint >= waypoints.Length)
                 {
-                    activePowerup_Speed.SetTarget(this.gameObject);
-                    activePowerup_Speed.Fire();
-                }
-                if (activePowerup_Shield = currentPowerup.gameObject.GetComponent<ButtShield>())
-                {
-                    activePowerup_Shield.SetTarget(this.gameObject);
-                    activePowerup_Shield.Fire();
+                    currentWaypoint = 0;
+                    RaceManager.Instance.LapFinishedByPlayer(this);
                 }
             }
-        }
 
-        // Respawning after hitting rocket or big butt with delay
-        if (flying)
-        {
-            deathTimer++;
-            if (deathTimer >= 200)
+            // Using Powerup
+            if (Input.GetKeyDown(KeyCode.E))
             {
-                RaceManager.Instance.PlayerRespawn(RaceManager.Instance.p_lastWaypoint, RaceManager.Instance.p_nextWaypoint);
-                deathTimer = 0;
-                flying = false;
+                SpeedBoost activePowerup_Speed;
+                ButtShield activePowerup_Shield;
+                if (currentPowerup != null)
+                {
+                    if (activePowerup_Speed = currentPowerup.gameObject.GetComponent<SpeedBoost>())
+                    {
+                        activePowerup_Speed.SetTarget(this.gameObject);
+                        activePowerup_Speed.Fire();
+                    }
+                    if (activePowerup_Shield = currentPowerup.gameObject.GetComponent<ButtShield>())
+                    {
+                        activePowerup_Shield.SetTarget(this.gameObject);
+                        activePowerup_Shield.Fire();
+                    }
+                }
+            }
+
+            // Respawning after hitting rocket or big butt with delay
+            if (flying)
+            {
+                deathTimer++;
+                if (deathTimer >= 200)
+                {
+                    RaceManager.Instance.PlayerRespawn(RaceManager.Instance.p_lastWaypoint, RaceManager.Instance.p_nextWaypoint);
+                    deathTimer = 0;
+                    flying = false;
+                }
             }
         }
-
-
     }
 
     // Handbrake Slip
@@ -235,6 +238,11 @@ public class CarController : MonoBehaviour
     public Transform GetCurrentWaypoint()
     {
         return waypoints[currentWaypoint];
+    }
+
+    public int GetCurrentWaypointInt()
+    {
+        return currentWaypoint;
     }
 
     public Transform GetLastWaypoint()

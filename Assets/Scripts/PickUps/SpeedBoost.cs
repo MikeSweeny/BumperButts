@@ -41,15 +41,12 @@ public class SpeedBoost : Powerup
             AIScript.topSpeed /= speedMultiplier / 1.5f;
             AIScript.maxTorque /= speedMultiplier;
             AIScript.decelerationTorque /= speedMultiplier;
-
-            //AIScript.currentPowerup = null;
         }
         if (CarScript = targetCar.gameObject.GetComponent<CarController>())
         {
             CarScript.topSpeed /= speedMultiplier / 1.5f;
             CarScript.maxTorque /= speedMultiplier;
             CarScript.decelerationTorque /= speedMultiplier;
-            CarScript.currentPowerup = null;
         }
     }
 
@@ -60,12 +57,16 @@ public class SpeedBoost : Powerup
             AIScript.topSpeed *= speedMultiplier / 1.5f;
             AIScript.maxTorque *= speedMultiplier;
             AIScript.decelerationTorque *= speedMultiplier;
+
+            AIScript.currentPowerup = null;
         }
         if (CarScript = targetCar.gameObject.GetComponent<CarController>())
         {
             CarScript.topSpeed *= speedMultiplier / 1.5f;
             CarScript.maxTorque *= speedMultiplier;
             CarScript.decelerationTorque *= speedMultiplier;
+
+            CarScript.currentPowerup = null;
         }
     }
 }

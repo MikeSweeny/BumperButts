@@ -53,17 +53,17 @@ public class RaceManager : MonoBehaviour
     private GameObject activePowerup;
 
     public GameObject speedPrefab;
-    private GameObject p_speedPrefab;
-    private GameObject[] speedPrefabs;
+    public GameObject p_speedPrefab;
+    public GameObject[] speedPrefabs;
 
     public GameObject shieldPrefab;
-    private GameObject p_shieldPrefab;
-    private GameObject[] shieldPrefabs;
+    public GameObject p_shieldPrefab;
+    public GameObject[] shieldPrefabs;
 
     //public GameObject rocketPrefab;
     //private GameObject p_rocketPrefab;
     //private GameObject[] rocketPrefabs;
-
+    public bool raceStarted;
     public bool m_isPaused = false;
     public GameObject m_pauseMenu;
     public GameObject m_startMenu;
@@ -81,7 +81,12 @@ public class RaceManager : MonoBehaviour
         {
             instance = this;
         }
-        CountDownTimerReset(3);
+
+        raceStarted = false;
+        m_isPaused = true;
+        m_startMenu.SetActive(true);
+        Time.timeScale = 0;
+        CountDownTimerReset(4);
     }
 
 
@@ -104,6 +109,8 @@ public class RaceManager : MonoBehaviour
     {
         switch (CountdownTimerSecondsRemaining())
         {
+            case 4:
+                return null;
             case 3:
                 return three;
             case 2:
@@ -111,6 +118,7 @@ public class RaceManager : MonoBehaviour
             case 1:
                 return one;
             case 0:
+                raceStarted = true;
                 return GO;
             default:
                 return null;
@@ -142,6 +150,7 @@ public class RaceManager : MonoBehaviour
         waypoint = new Transform[cars.Length];
         laps = new int[cars.Length];
         speedPrefabs = new GameObject[cars.Length];
+        shieldPrefabs = new GameObject[cars.Length];
         PickupBox[] boxes = (PickupBox[])GameObject.FindObjectsOfType<PickupBox>();
         foreach (PickupBox pickup in boxes)
         {
@@ -152,13 +161,12 @@ public class RaceManager : MonoBehaviour
         for (int i = 0; i < respawnTimes.Length; i++)
         {
             scripts[i] = cars[i].gameObject.GetComponent<AIController>();
-            components[i] = cars[i].gameObject.transform.GetChild(0).transform.GetChild(0).GetComponent<AIComponent>();
-            components[i].thisCarNum = i;
+            scripts[i].thisCarNum = i;
             respawnTimes[i] = respawnDelay;
             distanceLeftToTravel[i] = float.MaxValue;
             laps[i] = 0;
             speedPrefabs[i] = Instantiate(speedPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-            //shieldPrefabs[i] = Instantiate(shieldPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+            shieldPrefabs[i] = Instantiate(shieldPrefab, new Vector3(0, 0, 0), Quaternion.identity);
         }
         p_script = p_car.GetComponent<CarController>();
         p_respawnTime = p_respawnDelay;
@@ -172,6 +180,10 @@ public class RaceManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!raceStarted)
+        {
+            return;
+        }
         // AI lap navigate logic
         for (int i = 0; i < cars.Length; i++)
         {
@@ -194,10 +206,10 @@ public class RaceManager : MonoBehaviour
             {
                 AIRespawn(lastWaypoint[i], nextWaypoint[i], i);
             }
-            if (laps[i] == 4)
+            if (laps[i] == 3 && scripts[i].GetCurrentWaypointInt() == 2)
             {
-                TogglePause();
-
+                raceStarted = false;
+                PlayerLost();
             }
         }
         // Player lap navigate logic
@@ -219,9 +231,10 @@ public class RaceManager : MonoBehaviour
         {
             PlayerRespawn(p_lastWaypoint, p_nextWaypoint);
         }
-        if (p_laps >= 4)
+        if (p_laps >= 3 && p_script.GetCurrentWaypointInt() == 2)
         {
-            SceneManager.LoadScene("MainMenu");
+            raceStarted = false;
+            PlayerWin();
         }
 
 
@@ -263,19 +276,37 @@ public class RaceManager : MonoBehaviour
 
     public void NewPowerup(CarController script)
     {
+        int rand = Random.Range(1, 3);
+        if (rand == 1)
+        {
         activePowerup = p_shieldPrefab;
+        }
+        else if (rand == 2)
+        {
+            activePowerup = p_speedPrefab;
+        }
         script.SetCurrentPowerup(activePowerup);
     }
 
     public void NewPowerup(AIController script)
     {
-        activePowerup = shieldPrefabs[script.gameObject.GetComponent<AIComponent>().thisCarNum];
+        int rand = Random.Range(1, 3);
+        if (rand == 1)
+        {
+            activePowerup = shieldPrefabs[script.thisCarNum];
+        }
+        else if (rand == 2)
+        {
+            activePowerup = speedPrefabs[script.thisCarNum];
+        }
         script.SetCurrentPowerup(activePowerup);
     }
 
     public void StartGame()
     {
-        SceneManager.LoadScene("RaceLevel");
+        Time.timeScale = 1;
+        m_isPaused = false;
+        m_startMenu.SetActive(false);
     }
 
     public void ExitGame()
@@ -286,11 +317,11 @@ public class RaceManager : MonoBehaviour
     public void TogglePause()
     {
         Debug.Log("Pause Toggled");
-        if (RaceManager.Instance.m_isPaused)
+        if (m_isPaused)
         {
             UnPauseGame();
         }
-        else if (!(RaceManager.Instance.m_isPaused))
+        else if (!m_isPaused)
         {
             PauseGame();
         }
@@ -299,14 +330,33 @@ public class RaceManager : MonoBehaviour
     public void PauseGame()
     {
         Time.timeScale = 0;
-        RaceManager.Instance.m_isPaused = true;
-        RaceManager.Instance.m_pauseMenu.SetActive(true);
+        m_isPaused = true;
+        m_pauseMenu.SetActive(true);
     }
 
     public void UnPauseGame()
     {
         Time.timeScale = 1;
-        RaceManager.Instance.m_isPaused = false;
-        RaceManager.Instance.m_pauseMenu.SetActive(false);
+        m_isPaused = false;
+        m_pauseMenu.SetActive(false);
+    }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene("RaceLevel");
+    }
+
+    public void PlayerWin()
+    {
+        Time.timeScale = 0;
+        m_isPaused = true;
+        m_winMenu.SetActive(true);
+    }
+
+    public void PlayerLost()
+    {
+        Time.timeScale = 0;
+        m_isPaused = true;
+        m_loseMenu.SetActive(true);
     }
 }

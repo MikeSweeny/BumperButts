@@ -35,19 +35,19 @@ public class ButtShield : Powerup
     public void ResetButt(GameObject targetCar)
     {
         targetCar.transform.GetChild(1).gameObject.SetActive(false);
-        if (AIScript = targetCar.gameObject.GetComponent<AIController>())
-        {
-            //AIScript.currentPowerup = null;
-        }
-        if (CarScript = targetCar.gameObject.GetComponent<CarController>())
-        {
-            CarScript.currentPowerup = null;
-        }
     }
 
     public void GiveBigButt(GameObject targetCar)
     {
         targetCar.transform.GetChild(1).gameObject.SetActive(true);
+        if (AIScript = targetCar.gameObject.GetComponent<AIController>())
+        {
+            AIScript.currentPowerup = null;
+        }
+        if (CarScript = targetCar.gameObject.GetComponent<CarController>())
+        {
+            CarScript.currentPowerup = null;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
