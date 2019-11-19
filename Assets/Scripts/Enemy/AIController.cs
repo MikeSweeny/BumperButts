@@ -74,7 +74,7 @@ public class AIController : MonoBehaviour
             // Waypoint checking
             Vector3 RelativeWaypointPosition = transform.InverseTransformPoint(new Vector3(waypoints[currentWaypoint].position.x, transform.position.y, waypoints[currentWaypoint].position.z));
             inputSteer = RelativeWaypointPosition.x / RelativeWaypointPosition.magnitude;
-            if (RelativeWaypointPosition.magnitude < 5)
+            if (RelativeWaypointPosition.magnitude < 10)
             {
                 currentWaypoint++;
                 if (currentWaypoint >= waypoints.Length)
