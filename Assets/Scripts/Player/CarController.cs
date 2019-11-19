@@ -34,7 +34,7 @@ public class CarController : MonoBehaviour
     private float spoilerRatio = 2f;
     private bool applyHandBrake = false;
     private Transform[] waypoints;
-    public int currentWaypoint = 0;
+    private int currentWaypoint = 0;
     private float inputSteer;
     private float inputTorque;
 
@@ -69,6 +69,32 @@ public class CarController : MonoBehaviour
             // Keeping your thicc butt attached to your car
             ButtShieldMesh.transform.position = gameObject.transform.position;
             ButtShieldMesh.transform.rotation = gameObject.transform.rotation;
+
+            // Using Powerup
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                SpeedBoost activePowerup_Speed;
+                ButtShield activePowerup_Shield;
+                ButtRocket activePowerup_Rocket;
+                if (currentPowerup != null)
+                {
+                    if (activePowerup_Speed = currentPowerup.gameObject.GetComponent<SpeedBoost>())
+                    {
+                        activePowerup_Speed.SetTarget(this.gameObject);
+                        activePowerup_Speed.Fire();
+                    }
+                    if (activePowerup_Shield = currentPowerup.gameObject.GetComponent<ButtShield>())
+                    {
+                        activePowerup_Shield.SetTarget(this.gameObject);
+                        activePowerup_Shield.Fire();
+                    }
+                    if (activePowerup_Rocket = currentPowerup.gameObject.GetComponent<ButtRocket>())
+                    {
+                        activePowerup_Rocket.SetTarget(this.gameObject);
+                        activePowerup_Rocket.Fire();
+                    }
+                }
+            }
         }
     }
 
@@ -149,26 +175,6 @@ public class CarController : MonoBehaviour
                 {
                     currentWaypoint = 0;
                     RaceManager.Instance.LapFinishedByPlayer(this);
-                }
-            }
-
-            // Using Powerup
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                SpeedBoost activePowerup_Speed;
-                ButtShield activePowerup_Shield;
-                if (currentPowerup != null)
-                {
-                    if (activePowerup_Speed = currentPowerup.gameObject.GetComponent<SpeedBoost>())
-                    {
-                        activePowerup_Speed.SetTarget(this.gameObject);
-                        activePowerup_Speed.Fire();
-                    }
-                    if (activePowerup_Shield = currentPowerup.gameObject.GetComponent<ButtShield>())
-                    {
-                        activePowerup_Shield.SetTarget(this.gameObject);
-                        activePowerup_Shield.Fire();
-                    }
                 }
             }
 

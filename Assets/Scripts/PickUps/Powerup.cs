@@ -5,7 +5,6 @@ using UnityEngine;
 public class Powerup : MonoBehaviour
 {
     public bool fired = false;
-    public bool triggered = false;
     protected GameObject target;
 
     protected AIController AIScript;

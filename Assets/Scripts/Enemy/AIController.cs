@@ -74,7 +74,7 @@ public class AIController : MonoBehaviour
             // Waypoint checking
             Vector3 RelativeWaypointPosition = transform.InverseTransformPoint(new Vector3(waypoints[currentWaypoint].position.x, transform.position.y, waypoints[currentWaypoint].position.z));
             inputSteer = RelativeWaypointPosition.x / RelativeWaypointPosition.magnitude;
-            if (RelativeWaypointPosition.magnitude < 15)
+            if (RelativeWaypointPosition.magnitude < 5)
             {
                 currentWaypoint++;
                 if (currentWaypoint >= waypoints.Length)
@@ -145,6 +145,7 @@ public class AIController : MonoBehaviour
             {
                 SpeedBoost activePowerup_Speed;
                 ButtShield activePowerup_Shield;
+                ButtRocket activePowerup_Rocket;
                 if (currentPowerup != null)
                 {
                     if (activePowerup_Speed = currentPowerup.gameObject.GetComponent<SpeedBoost>())
@@ -156,6 +157,11 @@ public class AIController : MonoBehaviour
                     {
                         activePowerup_Shield.SetTarget(this.gameObject);
                         activePowerup_Shield.Fire();
+                    }
+                    if (activePowerup_Rocket = currentPowerup.gameObject.GetComponent<ButtRocket>())
+                    {
+                        activePowerup_Rocket.SetTarget(this.gameObject);
+                        activePowerup_Rocket.Fire();
                     }
                     useAbility = false;
                 }

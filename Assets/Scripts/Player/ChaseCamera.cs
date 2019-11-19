@@ -51,12 +51,18 @@ public class ChaseCamera : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        distance -= 2f;
+        if (other.gameObject.tag != "ButtRocket")
+        {
+            distance -= 2f;
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        CameraSlowReset();
+        if (other.gameObject.tag != "ButtRocket")
+        {
+            CameraSlowReset();
+        }
     }
     private void Update()
     {

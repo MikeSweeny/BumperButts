@@ -7,10 +7,12 @@ public class ButtRocket : Powerup
     private float maxSpeed;
     private Transform[] waypoints;
     public Transform waypointHolder;
-    private int currentWaypoint = 0;
+    public int currentWaypoint = 0;
     private float flightSpeed = 0.005f;
 
-    public Vector3 location;
+    private Vector3 startPos = new Vector3(0, 0, 0);
+    private Vector3 location;
+    private GameObject homingTarget;
 
     // Start is called before the first frame update
     void Start()
@@ -21,7 +23,6 @@ public class ButtRocket : Powerup
     // Update is called once per frame
     void Update()
     {
-        location = transform.position;
     }
 
     private void FixedUpdate()
@@ -29,11 +30,11 @@ public class ButtRocket : Powerup
         Vector3 RelativeWaypointPosition = transform.InverseTransformPoint(new Vector3(waypoints[currentWaypoint].position.x, transform.position.y, waypoints[currentWaypoint].position.z));
         while (gameObject.transform.position != waypoints[currentWaypoint].position)
         {
-            gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, waypoints[currentWaypoint].position, flightSpeed);
+            gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, waypoints[currentWaypoint].position, flightSpeed * Time.deltaTime);
         }
         transform.LookAt(waypoints[currentWaypoint]);
 
-        if (RelativeWaypointPosition.magnitude < 15)
+        if (RelativeWaypointPosition.magnitude < 2)
         {
             currentWaypoint++;
             if (currentWaypoint >= waypoints.Length)
@@ -41,6 +42,12 @@ public class ButtRocket : Powerup
                 currentWaypoint = 0;
             }
         }
+    }
+
+    public override void Fire()
+    {
+        LaunchButt(target);
+        fired = true;
     }
 
     public void GetWaypoints()
@@ -52,5 +59,28 @@ public class ButtRocket : Powerup
         {
             waypoints[i - 1] = potentialWaypoints[i];
         }
+    }
+
+    public void LaunchButt(GameObject targetCar)
+    {
+        location = targetCar.transform.position;
+        transform.position = location;
+        if (AIScript = targetCar.gameObject.GetComponent<AIController>())
+        {
+            currentWaypoint = AIScript.GetCurrentWaypointInt();
+            AIScript.currentPowerup = null;
+
+        }
+        if (CarScript = targetCar.gameObject.GetComponent<CarController>())
+        {
+            currentWaypoint = CarScript.GetCurrentWaypointInt();
+            CarScript.currentPowerup = null;
+        }
+    }
+
+    public void ResetRocket()
+    {
+        transform.position = startPos;
+        fired = false;
     }
 }

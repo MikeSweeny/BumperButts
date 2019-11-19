@@ -53,16 +53,17 @@ public class RaceManager : MonoBehaviour
     private GameObject activePowerup;
 
     public GameObject speedPrefab;
-    public GameObject p_speedPrefab;
-    public GameObject[] speedPrefabs;
+    private GameObject p_speedPrefab;
+    private GameObject[] speedPrefabs;
 
     public GameObject shieldPrefab;
-    public GameObject p_shieldPrefab;
-    public GameObject[] shieldPrefabs;
+    private GameObject p_shieldPrefab;
+    private GameObject[] shieldPrefabs;
 
-    //public GameObject rocketPrefab;
-    //private GameObject p_rocketPrefab;
-    //private GameObject[] rocketPrefabs;
+    public GameObject rocketPrefab;
+    private GameObject p_rocketPrefab;
+    private GameObject[] rocketPrefabs;
+
     public bool raceStarted;
     public bool m_isPaused = false;
     public GameObject m_pauseMenu;
@@ -151,6 +152,7 @@ public class RaceManager : MonoBehaviour
         laps = new int[cars.Length];
         speedPrefabs = new GameObject[cars.Length];
         shieldPrefabs = new GameObject[cars.Length];
+        rocketPrefabs = new GameObject[cars.Length];
         PickupBox[] boxes = (PickupBox[])GameObject.FindObjectsOfType<PickupBox>();
         foreach (PickupBox pickup in boxes)
         {
@@ -167,6 +169,8 @@ public class RaceManager : MonoBehaviour
             laps[i] = 0;
             speedPrefabs[i] = Instantiate(speedPrefab, new Vector3(0, 0, 0), Quaternion.identity);
             shieldPrefabs[i] = Instantiate(shieldPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+            rocketPrefabs[i] = Instantiate(rocketPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+            rocketPrefabs[i].gameObject.GetComponent<ButtRocket>().waypointHolder = GameObject.FindWithTag("WaypointHolder").transform;
         }
         p_script = p_car.GetComponent<CarController>();
         p_respawnTime = p_respawnDelay;
@@ -175,6 +179,8 @@ public class RaceManager : MonoBehaviour
 
         p_speedPrefab = Instantiate(speedPrefab, new Vector3(0, 0, 0), Quaternion.identity);
         p_shieldPrefab = Instantiate(shieldPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        p_rocketPrefab = Instantiate(rocketPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        p_rocketPrefab.gameObject.GetComponent<ButtRocket>().waypointHolder = GameObject.FindWithTag("WaypointHolder").transform;
     }
 
     // Update is called once per frame
