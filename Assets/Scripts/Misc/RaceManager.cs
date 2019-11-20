@@ -70,6 +70,7 @@ public class RaceManager : MonoBehaviour
     public GameObject m_startMenu;
     public GameObject m_winMenu;
     public GameObject m_loseMenu;
+    public GameObject m_gameHUD;
 
     private void Awake()
     {
@@ -186,6 +187,14 @@ public class RaceManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!m_startMenu.activeSelf && !m_loseMenu.activeSelf && !m_winMenu.activeSelf && !m_pauseMenu.activeSelf)
+        {
+            m_gameHUD.SetActive(true);
+        }
+        else
+        {
+            m_gameHUD.SetActive(false);
+        }
         if (!raceStarted)
         {
             return;
@@ -266,6 +275,7 @@ public class RaceManager : MonoBehaviour
     public void LapFinishedByPlayer(CarController script)
     {
         p_laps++;
+        p_script.SetLapInt(p_laps + 1);
     }
 
     public void LapFinishedByAI(AIController script)

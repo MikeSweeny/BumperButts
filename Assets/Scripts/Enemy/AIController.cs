@@ -102,7 +102,7 @@ public class AIController : MonoBehaviour
                 {
                     applyHandBrake = true;
                 }
-                else if (localVelocity.z > 10)
+                else if (localVelocity.x > 10)
                 {
                     applyHandBrake = false;
                     inputTorque = -1;
@@ -171,7 +171,7 @@ public class AIController : MonoBehaviour
             if (flying)
             {
                 deathTimer++;
-                if (deathTimer >= 200)
+                if (deathTimer >= 100)
                 {
                     int i = thisCarNum;
                     RaceManager.Instance.AIRespawn(RaceManager.Instance.lastWaypoint[i], RaceManager.Instance.nextWaypoint[i], i);

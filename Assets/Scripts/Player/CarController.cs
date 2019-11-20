@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CarController : MonoBehaviour
 {
@@ -45,12 +46,24 @@ public class CarController : MonoBehaviour
     private float flyingSpeedRatio = 700f;
     private int deathTimer = 0;
 
+    private SpeedBoost activePowerup_Speed;
+    private ButtShield activePowerup_Shield;
+    private ButtRocket activePowerup_Rocket;
+
+    public GameObject HUD;
+    private Text HUD_lap;
+    private Text HUD_place;
+
+    public Sprite HUD_rocket;
+    public Sprite HUD_shield;
+    public Sprite HUD_speed;
+
     // Start is called before the first frame update
     void Start()
     {
         body = GetComponent<Rigidbody>();
         body.centerOfMass += centerOfMassOffset;
-
+        HUD_lap = HUD.gameObject.transform.GetChild(4).GetComponent<Text>();
         //Get the waypoints from the track
         GetWaypoints();
     }
@@ -70,12 +83,31 @@ public class CarController : MonoBehaviour
             ButtShieldMesh.transform.position = gameObject.transform.position;
             ButtShieldMesh.transform.rotation = gameObject.transform.rotation;
 
+            //Getting current powerup
+            if (currentPowerup == null)
+            {
+                HUD.transform.GetChild(1).gameObject.transform.GetComponent<UnityEngine.UI.Image>().sprite = null;
+            }
+            else
+            {
+                if (activePowerup_Speed = currentPowerup.gameObject.GetComponent<SpeedBoost>())
+                {
+                    HUD.transform.GetChild(1).gameObject.transform.GetComponent<UnityEngine.UI.Image>().sprite = HUD_speed;
+                }
+                if (activePowerup_Shield = currentPowerup.gameObject.GetComponent<ButtShield>())
+                {
+                    HUD.transform.GetChild(1).gameObject.transform.GetComponent<UnityEngine.UI.Image>().sprite = HUD_shield;
+                }
+                if (activePowerup_Rocket = currentPowerup.gameObject.GetComponent<ButtRocket>())
+                {
+                    HUD.transform.GetChild(1).gameObject.transform.GetComponent<UnityEngine.UI.Image>().sprite = HUD_rocket;
+                }
+            }
+
+
             // Using Powerup
             if (Input.GetKeyDown(KeyCode.E))
             {
-                SpeedBoost activePowerup_Speed;
-                ButtShield activePowerup_Shield;
-                ButtRocket activePowerup_Rocket;
                 if (currentPowerup != null)
                 {
                     if (activePowerup_Speed = currentPowerup.gameObject.GetComponent<SpeedBoost>())
@@ -182,7 +214,7 @@ public class CarController : MonoBehaviour
             if (flying)
             {
                 deathTimer++;
-                if (deathTimer >= 200)
+                if (deathTimer >= 100)
                 {
                     RaceManager.Instance.PlayerRespawn(RaceManager.Instance.p_lastWaypoint, RaceManager.Instance.p_nextWaypoint);
                     deathTimer = 0;
@@ -289,5 +321,10 @@ public class CarController : MonoBehaviour
         Vector3 localVelocity = transform.InverseTransformDirection(body.velocity);
         body.AddForce(transform.up * (localVelocity.z * flyingSpeedRatio), ForceMode.Impulse);
         flying = true;
+    }
+
+    public void SetLapInt(int currentLap)
+    {
+        HUD_lap.text = currentLap.ToString();
     }
 }

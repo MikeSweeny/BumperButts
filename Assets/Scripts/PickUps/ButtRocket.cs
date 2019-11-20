@@ -9,6 +9,7 @@ public class ButtRocket : Powerup
     public Transform waypointHolder;
     public int currentWaypoint = 0;
     private float flightSpeed = 40f;
+    private bool rocketHit = false;
 
     public Vector3 startPos = new Vector3(0, 0, 0);
     private Vector3 location;
@@ -34,6 +35,7 @@ public class ButtRocket : Powerup
             }
             else
             {
+                rocketHit = true;
                 gameObject.transform.GetChild(0).gameObject.SetActive(true);
                 gameObject.transform.GetChild(0).gameObject.transform.GetChild(0).GetComponent<ParticleSystem>().Play();
                 gameObject.transform.GetChild(0).gameObject.transform.GetChild(1).GetComponent<ParticleSystem>().Play();
@@ -55,12 +57,16 @@ public class ButtRocket : Powerup
                     p_temp.GoFlying();
                 }
             }
-            currentTime += Time.deltaTime;
-            if (currentTime >= duration)
+            if (rocketHit)
             {
-                currentTime = 0;
-                ResetRocket();
+                currentTime += Time.deltaTime;
+                if (currentTime >= duration)
+                {
+                    currentTime = 0;
+                    ResetRocket();
+                }
             }
+
         }
     }
 
@@ -125,6 +131,7 @@ public class ButtRocket : Powerup
         homingTarget = null;
         transform.position = startPos;
         fired = false;
+        rocketHit = false;
 
         gameObject.transform.GetChild(0).gameObject.SetActive(false);
         gameObject.transform.GetChild(1).gameObject.SetActive(true);
@@ -138,6 +145,10 @@ public class ButtRocket : Powerup
         if (other.gameObject.CompareTag("Car") && other.gameObject.transform.parent.gameObject.transform.parent.gameObject != target.gameObject)
         {
             homingTarget = other.gameObject;
+        }
+        if (other.gameObject.CompareTag("ButtShield"))
+        {
+            ResetRocket();
         }
     }
 }
