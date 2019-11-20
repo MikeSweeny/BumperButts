@@ -167,9 +167,9 @@ public class RaceManager : MonoBehaviour
             respawnTimes[i] = respawnDelay;
             distanceLeftToTravel[i] = float.MaxValue;
             laps[i] = 0;
-            speedPrefabs[i] = Instantiate(speedPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-            shieldPrefabs[i] = Instantiate(shieldPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-            rocketPrefabs[i] = Instantiate(rocketPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+            speedPrefabs[i] = Instantiate(speedPrefab, rocketPrefab.GetComponent<ButtRocket>().startPos, Quaternion.identity);
+            shieldPrefabs[i] = Instantiate(shieldPrefab, rocketPrefab.GetComponent<ButtRocket>().startPos, Quaternion.identity);
+            rocketPrefabs[i] = Instantiate(rocketPrefab, rocketPrefab.GetComponent<ButtRocket>().startPos, Quaternion.identity);
             rocketPrefabs[i].gameObject.GetComponent<ButtRocket>().waypointHolder = GameObject.FindWithTag("WaypointHolder").transform;
         }
         p_script = p_car.GetComponent<CarController>();
@@ -177,9 +177,9 @@ public class RaceManager : MonoBehaviour
         p_distanceLeftToTravel = float.MaxValue;
         p_laps = 0;
 
-        p_speedPrefab = Instantiate(speedPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-        p_shieldPrefab = Instantiate(shieldPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-        p_rocketPrefab = Instantiate(rocketPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        p_speedPrefab = Instantiate(speedPrefab, rocketPrefab.GetComponent<ButtRocket>().startPos, Quaternion.identity);
+        p_shieldPrefab = Instantiate(shieldPrefab, rocketPrefab.GetComponent<ButtRocket>().startPos, Quaternion.identity);
+        p_rocketPrefab = Instantiate(rocketPrefab, rocketPrefab.GetComponent<ButtRocket>().startPos, Quaternion.identity);
         p_rocketPrefab.gameObject.GetComponent<ButtRocket>().waypointHolder = GameObject.FindWithTag("WaypointHolder").transform;
     }
 
@@ -282,8 +282,7 @@ public class RaceManager : MonoBehaviour
 
     public void NewPowerup(CarController script)
     {
-        //int rand = Random.Range(1, 4);
-        int rand = 3;
+        int rand = Random.Range(1, 4);
         if (rand == 1)
         {
         activePowerup = p_shieldPrefab;
