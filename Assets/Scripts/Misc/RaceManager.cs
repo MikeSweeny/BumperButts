@@ -71,6 +71,7 @@ public class RaceManager : MonoBehaviour
     public GameObject m_winMenu;
     public GameObject m_loseMenu;
     public GameObject m_gameHUD;
+    public GameObject m_customMenu;
 
     private void Awake()
     {
@@ -109,22 +110,30 @@ public class RaceManager : MonoBehaviour
 
     Texture2D CountDownTimerImage()
     {
-        switch (CountdownTimerSecondsRemaining())
+        if (raceStarted)
         {
-            case 4:
-                return null;
-            case 3:
-                return three;
-            case 2:
-                return two;
-            case 1:
-                return one;
-            case 0:
-                raceStarted = true;
-                return GO;
-            default:
-                return null;
+            switch (CountdownTimerSecondsRemaining())
+            {
+                case 4:
+                    return null;
+                case 3:
+                    return three;
+                case 2:
+                    return two;
+                case 1:
+                    return one;
+                case 0:
+                    raceStarted = true;
+                    return GO;
+                default:
+                    return null;
+            }
         }
+        else
+        {
+            return null;
+        }
+
     }
 
     int CountdownTimerSecondsRemaining()
@@ -187,7 +196,7 @@ public class RaceManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!m_startMenu.activeSelf && !m_loseMenu.activeSelf && !m_winMenu.activeSelf && !m_pauseMenu.activeSelf)
+        if (!m_startMenu.activeSelf && !m_loseMenu.activeSelf && !m_winMenu.activeSelf && !m_pauseMenu.activeSelf && !m_customMenu.activeSelf)
         {
             m_gameHUD.SetActive(true);
         }
@@ -331,6 +340,7 @@ public class RaceManager : MonoBehaviour
         Time.timeScale = 1;
         m_isPaused = false;
         m_startMenu.SetActive(false);
+        m_customMenu.SetActive(false);
     }
 
     public void ExitGame()
@@ -381,5 +391,12 @@ public class RaceManager : MonoBehaviour
         Time.timeScale = 0;
         m_isPaused = true;
         m_loseMenu.SetActive(true);
+    }
+
+    public void CustomizeCar()
+    {
+        Time.timeScale = 1;
+        m_startMenu.SetActive(false);
+        m_customMenu.SetActive(true);
     }
 }
