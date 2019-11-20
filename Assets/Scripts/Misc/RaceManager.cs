@@ -282,28 +282,37 @@ public class RaceManager : MonoBehaviour
 
     public void NewPowerup(CarController script)
     {
-        int rand = Random.Range(1, 3);
+        //int rand = Random.Range(1, 4);
+        int rand = 3;
         if (rand == 1)
         {
         activePowerup = p_shieldPrefab;
         }
-        else if (rand == 2)
+        if (rand == 2)
         {
             activePowerup = p_speedPrefab;
+        }
+        if (rand == 3)
+        {
+            activePowerup = p_rocketPrefab;
         }
         script.SetCurrentPowerup(activePowerup);
     }
 
     public void NewPowerup(AIController script)
     {
-        int rand = Random.Range(1, 3);
+        int rand = Random.Range(1, 4);
         if (rand == 1)
         {
             activePowerup = shieldPrefabs[script.thisCarNum];
         }
-        else if (rand == 2)
+        if (rand == 2)
         {
             activePowerup = speedPrefabs[script.thisCarNum];
+        }
+        if (rand == 3)
+        {
+            activePowerup = rocketPrefabs[script.thisCarNum];
         }
         script.SetCurrentPowerup(activePowerup);
     }
@@ -354,8 +363,7 @@ public class RaceManager : MonoBehaviour
 
     public void PlayerWin()
     {
-        Time.timeScale = 0;
-        m_isPaused = true;
+        raceStarted = false;
         m_winMenu.SetActive(true);
     }
 

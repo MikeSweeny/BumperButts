@@ -8,7 +8,7 @@ public class ButtRocket : Powerup
     private Transform[] waypoints;
     public Transform waypointHolder;
     public int currentWaypoint = 0;
-    private float flightSpeed = 20f;
+    private float flightSpeed = 25f;
 
     private Vector3 startPos = new Vector3(0, 0, 0);
     private Vector3 location;
@@ -27,10 +27,39 @@ public class ButtRocket : Powerup
 
     private void FixedUpdate()
     {
+        if (homingTarget)
+        {
+            if (gameObject.transform.position != homingTarget.transform.position)
+            {
+                gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, homingTarget.transform.position, (flightSpeed * 1.5f * Time.deltaTime));
+            }
+            else
+            {
+                gameObject.transform.GetChild(0).gameObject.SetActive(true);
+                AIController AI_temp;
+                CarController p_temp;
+                if (AI_temp = homingTarget.gameObject.GetComponent<AIController>())
+                {
+                    AI_temp.GoFlying();
+                }
+                if (p_temp = homingTarget.gameObject.GetComponent<CarController>())
+                {
+                    p_temp.GoFlying();
+                }
+            }
+            currentTime += Time.deltaTime;
+            if (currentTime >= duration)
+            {
+                fired = false;
+                currentTime = 0;
+                gameObject.SetActive(false);
+            }
+            return;
+        }
         Vector3 RelativeWaypointPosition = transform.InverseTransformPoint(new Vector3(waypoints[currentWaypoint].position.x, transform.position.y, waypoints[currentWaypoint].position.z));
         if (gameObject.transform.position != waypoints[currentWaypoint].position)
         {
-            gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, waypoints[currentWaypoint].position, flightSpeed * Time.deltaTime);
+            gameObject.transform.position = Vector3.MoveTowards(gameObject.transform.position, waypoints[currentWaypoint].position, (flightSpeed * Time.deltaTime));
         }
         transform.LookAt(waypoints[currentWaypoint]);
 
@@ -46,6 +75,7 @@ public class ButtRocket : Powerup
 
     public override void Fire()
     {
+
         LaunchButt(target);
         fired = true;
     }
@@ -64,6 +94,7 @@ public class ButtRocket : Powerup
     public void LaunchButt(GameObject targetCar)
     {
         location = targetCar.transform.position;
+        location.y = location.y + 7;
         transform.position = location;
         if (AIScript = targetCar.gameObject.GetComponent<AIController>())
         {
@@ -82,5 +113,13 @@ public class ButtRocket : Powerup
     {
         transform.position = startPos;
         fired = false;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Car") && other.gameObject != target.gameObject)
+        {
+            homingTarget = other.gameObject;
+        }
     }
 }

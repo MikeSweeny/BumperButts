@@ -32,6 +32,7 @@ public class Powerup : MonoBehaviour
 
     public void SetTarget(GameObject targetCar)
     {
+        gameObject.SetActive(true);
         target = targetCar;
     }
 }

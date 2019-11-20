@@ -74,7 +74,7 @@ public class AIController : MonoBehaviour
             // Waypoint checking
             Vector3 RelativeWaypointPosition = transform.InverseTransformPoint(new Vector3(waypoints[currentWaypoint].position.x, transform.position.y, waypoints[currentWaypoint].position.z));
             inputSteer = RelativeWaypointPosition.x / RelativeWaypointPosition.magnitude;
-            if (RelativeWaypointPosition.magnitude < 10)
+            if (RelativeWaypointPosition.magnitude < 25)
             {
                 currentWaypoint++;
                 if (currentWaypoint >= waypoints.Length)
@@ -286,7 +286,7 @@ public class AIController : MonoBehaviour
         }
     }
 
-    private void GoFlying()
+    public void GoFlying()
     {
         Vector3 localVelocity = transform.InverseTransformDirection(body.velocity);
         body.AddForce(transform.up * (localVelocity.z * flyingSpeedRatio), ForceMode.Impulse);
