@@ -43,7 +43,7 @@ public class AIController : MonoBehaviour
     public GameObject currentPowerup;
     private PickupBox pickup;
     private bool flying = false;
-    private float flyingSpeedRatio = 700f;
+    private float flyingSpeedRatio = 400f;
     private bool useAbility = false;
     private int deathTimer = 0;
 

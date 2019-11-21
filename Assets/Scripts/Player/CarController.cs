@@ -32,7 +32,10 @@ public class CarController : MonoBehaviour
     private float currentSpeed;
     private Vector3 centerOfMassOffset = new Vector3(0f, -0.9f, 0f);
     private Rigidbody body;
+    private float currentSpoilerRatio;
     private float spoilerRatio = 2f;
+    private float spoilerRatio_small = 2.5f;
+    private float spoilerRatio_big = 1.5f;
     private bool applyHandBrake = false;
     private Transform[] waypoints;
     private int currentWaypoint = 0;
@@ -43,7 +46,7 @@ public class CarController : MonoBehaviour
     public GameObject currentPowerup;
     private PickupBox pickup;
     private bool flying = false;
-    private float flyingSpeedRatio = 700f;
+    private float flyingSpeedRatio = 400f;
     private int deathTimer = 0;
 
     private SpeedBoost activePowerup_Speed;
@@ -57,6 +60,10 @@ public class CarController : MonoBehaviour
     public Sprite HUD_rocket;
     public Sprite HUD_shield;
     public Sprite HUD_speed;
+
+    public GameObject Butt;
+    public GameObject Butt_small;
+    public GameObject Butt_big;
 
     // Start is called before the first frame update
     void Start()
@@ -127,6 +134,10 @@ public class CarController : MonoBehaviour
                     }
                 }
             }
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                RaceManager.Instance.PlayerRespawn(RaceManager.Instance.p_lastWaypoint, RaceManager.Instance.p_nextWaypoint);
+            }
         }
     }
 
@@ -140,7 +151,7 @@ public class CarController : MonoBehaviour
 
             //spoiler
             Vector3 localVelocity = transform.InverseTransformDirection(body.velocity);
-            body.AddForce(-transform.up * (localVelocity.z * spoilerRatio), ForceMode.Impulse);
+            body.AddForce(-transform.up * (localVelocity.z * currentSpoilerRatio), ForceMode.Impulse);
 
             //braking
             if (!applyHandBrake && (Input.GetAxis("Vertical") <= -0.5f && localVelocity.z > 0 || (Input.GetAxis("Vertical") <= -0.5f && localVelocity.z > 0)))
@@ -221,6 +232,19 @@ public class CarController : MonoBehaviour
                     flying = false;
                 }
             }
+        }
+
+        if (Butt_small.gameObject.activeSelf)
+        {
+            currentSpoilerRatio = spoilerRatio_small;
+        }
+        if (Butt.gameObject.activeSelf)
+        {
+            currentSpoilerRatio = spoilerRatio;
+        }
+        if (Butt_big.gameObject.activeSelf)
+        {
+            currentSpoilerRatio = spoilerRatio_big;
         }
     }
 

@@ -36,6 +36,7 @@ public class RaceManager : MonoBehaviour
     public Texture2D one;
     private int countdownTimerDelay;
     private float countdownTimerStartTime;
+    private float countdownTimerStartTimeOffset;
 
     public static RaceManager Instance { get { return instance; } }
     private static RaceManager instance = null;
@@ -64,6 +65,7 @@ public class RaceManager : MonoBehaviour
     private GameObject p_rocketPrefab;
     private GameObject[] rocketPrefabs;
 
+    public bool customStart = false;
     public bool raceStarted;
     public bool m_isPaused = false;
     public GameObject m_pauseMenu;
@@ -89,7 +91,6 @@ public class RaceManager : MonoBehaviour
         m_isPaused = true;
         m_startMenu.SetActive(true);
         Time.timeScale = 0;
-        CountDownTimerReset(4);
     }
 
 
@@ -110,7 +111,7 @@ public class RaceManager : MonoBehaviour
 
     Texture2D CountDownTimerImage()
     {
-        if (raceStarted)
+        if (customStart)
         {
             switch (CountdownTimerSecondsRemaining())
             {
@@ -339,8 +340,11 @@ public class RaceManager : MonoBehaviour
     {
         Time.timeScale = 1;
         m_isPaused = false;
+        customStart = true;
         m_startMenu.SetActive(false);
         m_customMenu.SetActive(false);
+
+        CountDownTimerReset(4);
     }
 
     public void ExitGame()
@@ -382,6 +386,7 @@ public class RaceManager : MonoBehaviour
 
     public void PlayerWin()
     {
+        customStart = false;
         raceStarted = false;
         m_winMenu.SetActive(true);
     }
@@ -389,6 +394,8 @@ public class RaceManager : MonoBehaviour
     public void PlayerLost()
     {
         Time.timeScale = 0;
+        customStart = false;
+        raceStarted = false;
         m_isPaused = true;
         m_loseMenu.SetActive(true);
     }
